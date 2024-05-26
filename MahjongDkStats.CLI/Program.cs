@@ -27,7 +27,7 @@ var html = await htmlRenderer.Dispatcher.InvokeAsync(async () =>
     return output.ToHtmlString();
 });
 
-Console.WriteLine(html);
+await File.WriteAllTextAsync("dist/index.html", html);
 
 
 var url = "https://raw.githubusercontent.com/MartinFaartoft/MahjongDkScraper/main/data/mcr_games_full.json";
