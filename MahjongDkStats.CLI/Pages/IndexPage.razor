@@ -1,9 +1,43 @@
-﻿<html>
-<h1>Index</h1>
-<p>@Message</p>
+﻿@using MahjongDkStatsCalculators
+
+<html><title>Mahjong Denmark - Gameplay Statistics</title>
+<h1>Mahong Denmark - Gameplay Statistics</h1>
+
+<h2>Global Statistics</h2>
+<table>
+@foreach(var stat in Stats.GlobalStatistics)
+{
+    <tr>
+        <td>@stat.Title</td>
+        <td>@stat.Value</td>
+    </tr>
+}
+</table>
+
+<h2>MCR Statistics</h2>
+<table>
+    @foreach (var stat in Stats.McrStatistics)
+    {
+        <tr>
+            <td>@stat.Title</td>
+            <td>@stat.Value</td>
+        </tr>
+    }
+</table>
+
+<h2>Riichi Statistics</h2>
+<table>
+    @foreach (var stat in Stats.RiichiStatistics)
+    {
+        <tr>
+            <td>@stat.Title</td>
+            <td>@stat.Value</td>
+        </tr>
+    }
+</table>
+</html>
 
 @code {
     [Parameter]
-    public string Message { get; set; }
+    public StatisticsResult Stats { get; set; } = null!;
 }
-</html>
