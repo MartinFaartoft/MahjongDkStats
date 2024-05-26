@@ -1,14 +1,14 @@
 ﻿@using MahjongDkStatsCalculators
 
 <html>
-<title>Mahjong Denmark - Gameplay Statistics</title>
+<title>Mahjong Denmark - Statistics</title>
 <head>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sakura.css/css/sakura.css" type="text/css">
 </head>
 <body>
-	<h1>Gameplay Statistics</h1>
+	<h1>Mahjong Denmark - Statistics</h1>
 
-	<h2>Global Statistics (Across game variants)</h2>
+	<h2>Global (across variants)</h2>
 	<table>
 		@foreach (var stat in Stats.GlobalStatistics)
 		{
@@ -19,7 +19,7 @@
 		}
 	</table>
 
-	<h2>MCR Statistics</h2>
+	<h2>MCR</h2>
 	<table>
 		@foreach (var stat in Stats.McrStatistics)
 		{
@@ -30,7 +30,7 @@
 		}
 	</table>
 
-	<h2>Riichi Statistics</h2>
+	<h2>Riichi</h2>
 	<table>
 		@foreach (var stat in Stats.RiichiStatistics)
 		{
