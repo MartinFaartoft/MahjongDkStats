@@ -1,43 +1,49 @@
 ﻿@using MahjongDkStatsCalculators
 
-<html><title>Mahjong Denmark - Gameplay Statistics</title>
-<h1>Mahong Denmark - Gameplay Statistics</h1>
+<html>
+<title>Mahjong Denmark - Gameplay Statistics</title>
+<head>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sakura.css/css/sakura.css" type="text/css">
+</head>
+<body>
+	<h1>Gameplay Statistics</h1>
 
-<h2>Global Statistics</h2>
-<table>
-@foreach(var stat in Stats.GlobalStatistics)
-{
-    <tr>
-        <td>@stat.Title</td>
-        <td>@stat.Value</td>
-    </tr>
-}
-</table>
+	<h2>Global Statistics (Across game variants)</h2>
+	<table>
+		@foreach (var stat in Stats.GlobalStatistics)
+		{
+			<tr>
+				<td>@stat.Title</td>
+				<td>@stat.Value</td>
+			</tr>
+		}
+	</table>
 
-<h2>MCR Statistics</h2>
-<table>
-    @foreach (var stat in Stats.McrStatistics)
-    {
-        <tr>
-            <td>@stat.Title</td>
-            <td>@stat.Value</td>
-        </tr>
-    }
-</table>
+	<h2>MCR Statistics</h2>
+	<table>
+		@foreach (var stat in Stats.McrStatistics)
+		{
+			<tr>
+				<td>@stat.Title</td>
+				<td>@stat.Value</td>
+			</tr>
+		}
+	</table>
 
-<h2>Riichi Statistics</h2>
-<table>
-    @foreach (var stat in Stats.RiichiStatistics)
-    {
-        <tr>
-            <td>@stat.Title</td>
-            <td>@stat.Value</td>
-        </tr>
-    }
-</table>
+	<h2>Riichi Statistics</h2>
+	<table>
+		@foreach (var stat in Stats.RiichiStatistics)
+		{
+			<tr>
+				<td>@stat.Title</td>
+				<td>@stat.Value</td>
+			</tr>
+		}
+	</table>
+</body>
 </html>
 
 @code {
-    [Parameter]
-    public StatisticsResult Stats { get; set; } = null!;
+	[Parameter]
+	public StatisticsResult Stats { get; set; } = null!;
 }
