@@ -9,7 +9,9 @@ public static class ServiceCollectionExtensions
     {
         services
             .AddTransient<IStatsCalculator, GlobalCountsCalculator>()
-            .AddTransient<IStatsCalculator, BestScoreCalculator>();
+			.AddTransient<IStatsCalculator, GlobalMcrCountsCalculator>()
+			.AddTransient<IStatsCalculator, GlobalRiichiCountsCalculator>()
+			.AddTransient<IStatsCalculator, BestScoreCalculator>();
 
         return services;
     }
