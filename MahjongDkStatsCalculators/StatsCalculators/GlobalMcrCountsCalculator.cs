@@ -1,6 +1,4 @@
-﻿using System.Transactions;
-
-namespace MahjongDkStatsCalculators.StatsCalculators;
+﻿namespace MahjongDkStatsCalculators.StatsCalculators;
 
 internal class GlobalMcrCountsCalculator : GlobalCountsCalculator
 {
