@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MahjongDkStats.CLI;
 using System;
+using System.Drawing;
 
 public class Program
 {
@@ -67,5 +68,15 @@ public class Program
         });
 
         await File.WriteAllTextAsync("dist/index.html", html);
-    }
+        
+		double[] dataX = { 1, 2, 3, 4, 5 };
+		double[] dataY = { 1, 4, 9, 16, 25 };
+
+		ScottPlot.Plot myPlot = new();
+		myPlot.Add.Scatter(dataX, dataY);
+
+		myPlot.FigureBackground.Color = ScottPlot.Color.FromHex("#F9F9F9");
+		Directory.CreateDirectory("dist/img");
+		myPlot.SavePng("dist/img/plot.png", 600, 338);
+	}
 }
