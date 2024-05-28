@@ -5,8 +5,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MahjongDkStats.CLI;
-using System;
-using System.Drawing;
+using System.Text.RegularExpressions;
 
 public class Program
 {
@@ -55,20 +54,17 @@ public class Program
 
     private static async Task RenderHtmlSite(StatisticsResult result, HtmlRenderer htmlRenderer)
     {
-        var html = await htmlRenderer.Dispatcher.InvokeAsync(async () =>
-        {
-            var dictionary = new Dictionary<string, object?>
-            {
-                { "Stats", result }
-            };
-
-            var parameters = ParameterView.FromDictionary(dictionary);
-            var output = await htmlRenderer.RenderComponentAsync<IndexPage>(parameters);
-
-            return output.ToHtmlString();
-        });
-
+		Directory.CreateDirectory("dist");
+		Dictionary<string, object?> parameters = new Dictionary<string, object?> { { "Stats", result } };
+        var html = await RenderPageToHtml<IndexPage>(parameters, htmlRenderer);
         await File.WriteAllTextAsync("dist/index.html", html);
+
+        foreach (var player in result.PlayerStatistics)
+        {
+			Dictionary<string, object?> playerParameters = new Dictionary<string, object?> { { "PlayerStats", player } };
+			var playerHtml = await RenderPageToHtml<PlayerPage>(playerParameters, htmlRenderer);
+			await File.WriteAllTextAsync($"dist/{NameSanitizer.SanitizeForUrlUsage(player.Name)}.html", playerHtml);
+		}
         
 		double[] dataX = { 1, 2, 3, 4, 5 };
 		double[] dataY = { 1, 4, 9, 16, 25 };
@@ -80,4 +76,17 @@ public class Program
 		Directory.CreateDirectory("dist/img");
 		myPlot.SavePng("dist/img/plot.png", 600, 338);
 	}
+
+	private static async Task<string> RenderPageToHtml<T>(Dictionary<string, object?> parameters, HtmlRenderer htmlRenderer) where T : IComponent
+	{
+		var html = await htmlRenderer.Dispatcher.InvokeAsync(async () =>
+		{
+			var output = await htmlRenderer.RenderComponentAsync<T>(ParameterView.FromDictionary(parameters));
+			return output.ToHtmlString();
+		});
+
+        return html;
+	}
+
+
 }
