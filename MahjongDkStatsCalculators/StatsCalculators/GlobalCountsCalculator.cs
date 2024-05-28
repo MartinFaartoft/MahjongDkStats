@@ -1,6 +1,6 @@
 ﻿namespace MahjongDkStatsCalculators.StatsCalculators;
 
-internal class GlobalCountsCalculator : StatsCalculatorBase
+internal class GlobalCountsCalculator : StatisticsCalculatorBase
 {
     protected int _gameCount = 0;
 	protected int _windsCount = 0;

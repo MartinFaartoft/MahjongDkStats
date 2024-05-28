@@ -48,8 +48,9 @@ public class Program
         var globalStatistics = statsCalculators.SelectMany(calc => calc.GetGlobalStatistics()).ToList();
         var mcrStatistics = statsCalculators.SelectMany(calc => calc.GetGlobalMcrStatistics()).ToList();
         var riichiStatistics = statsCalculators.SelectMany(calc => calc.GetGlobalRiichiStatistics()).ToList();
+        var playerStatistics = statsCalculators.SelectMany(calc => calc.GetPlayerStatistics()).ToList().OrderBy(ps => ps.Name);
 
-        await RenderHtmlSite(new StatisticsResult(globalStatistics, mcrStatistics, riichiStatistics), htmlRenderer);
+		await RenderHtmlSite(new StatisticsResult(globalStatistics, mcrStatistics, riichiStatistics, playerStatistics), htmlRenderer);
     }
 
     private static async Task RenderHtmlSite(StatisticsResult result, HtmlRenderer htmlRenderer)

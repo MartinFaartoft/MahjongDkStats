@@ -11,7 +11,8 @@ public static class ServiceCollectionExtensions
             .AddTransient<IStatsCalculator, GlobalCountsCalculator>()
 			.AddTransient<IStatsCalculator, GlobalMcrCountsCalculator>()
 			.AddTransient<IStatsCalculator, GlobalRiichiCountsCalculator>()
-			.AddTransient<IStatsCalculator, BestScoreCalculator>();
+			.AddTransient<IStatsCalculator, BestScoreCalculator>()
+            .AddTransient<IStatsCalculator, PlayerStatisticsCalculator>();
 
         return services;
     }

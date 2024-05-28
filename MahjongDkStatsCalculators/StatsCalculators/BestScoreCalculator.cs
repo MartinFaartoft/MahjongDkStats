@@ -1,6 +1,6 @@
 ﻿namespace MahjongDkStatsCalculators.StatsCalculators;
 
-internal class BestScoreCalculator : StatsCalculatorBase
+internal class BestScoreCalculator : StatisticsCalculatorBase
 {
 	private Player _bestMcrScore = new Player(string.Empty, int.MinValue);
 	private Player _bestRecentMcrScore = new Player(string.Empty, int.MinValue);

@@ -1,6 +1,6 @@
 ﻿namespace MahjongDkStatsCalculators.StatsCalculators;
 
-internal class PlayerGameCountCalculator : StatsCalculatorBase
+internal class PlayerGameCountCalculator : StatisticsCalculatorBase
 {
     private Dictionary<string, int> GamesPlayed = [];
 

@@ -2,10 +2,12 @@
 
 public interface IStatsCalculator
 {
-    public void AppendGame(Game game, GameType gameType);
+    void AppendGame(Game game, GameType gameType);
 
-    public IEnumerable<Statistic> GetGlobalStatistics();
+    IEnumerable<Statistic> GetGlobalStatistics();
 
-    public IEnumerable<Statistic> GetGlobalMcrStatistics();
+    IEnumerable<Statistic> GetGlobalMcrStatistics();
     IEnumerable<Statistic> GetGlobalRiichiStatistics();
+
+    IEnumerable<PlayerStatistics> GetPlayerStatistics();
 }
