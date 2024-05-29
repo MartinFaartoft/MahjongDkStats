@@ -10,11 +10,16 @@
 <h2>Global (across variants)</h2>
 <p>TODO</p>
 <h2>MCR</h2>
-<p>TODO</p>
+<img src="img/@CreateMcrPlotUrl(PlayerStats)" />
 <h2>Riichi</h2>
 <p>TODO</p>
 
 @code {
 	[Parameter]
 	public PlayerStatistics PlayerStats { get; set; } = null!;
+
+	public string CreateMcrPlotUrl(PlayerStatistics p)
+	{
+		return MahjongDkStats.CLI.NameSanitizer.SanitizeForUrlUsage(p.Name) + "-mcr-rating.png";
+	}
 }

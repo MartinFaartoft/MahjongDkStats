@@ -9,7 +9,7 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 	{
 		foreach(var player in game.Players)
 		{
-			UpdatePlayer(player, game.DateOfGame);
+			UpdatePlayer(player, game, gameType);
 		}
 	}
 
@@ -17,10 +17,13 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 	{
 		return Players
 			.Where(p => p.Value.LatestGame > activeThreshold)
-			.Select(kv => new PlayerStatistics(kv.Key, [new Statistic("Game count", kv.Value.GameCount.ToString()), new Statistic("Most recent game", kv.Value.LatestGame.ToString("yyyy-MM-dd"))]));
+			.Select(kv => new PlayerStatistics(
+				kv.Key, 
+				[new Statistic("Game count", kv.Value.GameCount.ToString()), new Statistic("Most recent game", kv.Value.LatestGame.ToString("yyyy-MM-dd"))],
+				new DateTimeChart(kv.Value.McrRating.Keys.Select(d => d.ToDateTime(TimeOnly.MinValue)).ToArray(), kv.Value.McrRating.Values.Select(r => (double)r).ToArray())));
 	}
 
-	private void UpdatePlayer(Player player, DateOnly dateOfGame)
+	private void UpdatePlayer(Player player, Game game, GameType gameType)
 	{
 		if (!Players.ContainsKey(player.Name))
 		{
@@ -31,7 +34,12 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 
 		stats.GameCount++;
 
-		stats.LatestGame = stats.LatestGame > dateOfGame ? stats.LatestGame : dateOfGame;
+		stats.LatestGame = stats.LatestGame > game.DateOfGame ? stats.LatestGame : game.DateOfGame;
+
+		if (gameType == GameType.Mcr)
+		{
+			stats.McrRating[game.DateOfGame] = player.NewRating;
+		}
 	}
 
 	private class PlayerStats()
@@ -39,5 +47,7 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 		public int GameCount { get; set; }
 
 		public DateOnly LatestGame { get; set; }
-	}
+
+		public Dictionary<DateOnly, decimal> McrRating { get; set; } = [];
+    }
 }

@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MahjongDkStats.CLI;
 using System.Text.RegularExpressions;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 public class Program
 {
@@ -55,6 +56,7 @@ public class Program
     private static async Task RenderHtmlSite(StatisticsResult result, HtmlRenderer htmlRenderer)
     {
 		Directory.CreateDirectory("dist");
+		Directory.CreateDirectory("dist/img");
 		Dictionary<string, object?> parameters = new Dictionary<string, object?> { { "Stats", result } };
         var html = await RenderPageToHtml<IndexPage>(parameters, htmlRenderer);
         await File.WriteAllTextAsync("dist/index.html", html);
@@ -64,6 +66,9 @@ public class Program
 			Dictionary<string, object?> playerParameters = new Dictionary<string, object?> { { "PlayerStats", player } };
 			var playerHtml = await RenderPageToHtml<PlayerPage>(playerParameters, htmlRenderer);
 			await File.WriteAllTextAsync($"dist/{NameSanitizer.SanitizeForUrlUsage(player.Name)}.html", playerHtml);
+
+			var mcrRatingPlot = CreateRatingPlot(player.McrRating);
+            mcrRatingPlot.SavePng($"dist/img/{NameSanitizer.SanitizeForUrlUsage(player.Name)}-mcr-rating.png", 600, 338);
 		}
         
 		double[] dataX = { 1, 2, 3, 4, 5 };
@@ -73,8 +78,19 @@ public class Program
 		myPlot.Add.Scatter(dataX, dataY);
 
 		myPlot.FigureBackground.Color = ScottPlot.Color.FromHex("#F9F9F9");
-		Directory.CreateDirectory("dist/img");
+		
 		myPlot.SavePng("dist/img/plot.png", 600, 338);
+	}
+
+	private static ScottPlot.Plot CreateRatingPlot(DateTimeChart mcrRating)
+	{
+		ScottPlot.Plot myPlot = new();
+		myPlot.Add.Scatter(mcrRating.X, mcrRating.Y);
+
+		myPlot.FigureBackground.Color = ScottPlot.Color.FromHex("#F9F9F9");
+		myPlot.Axes.DateTimeTicksBottom();
+
+		return myPlot;
 	}
 
 	private static async Task<string> RenderPageToHtml<T>(Dictionary<string, object?> parameters, HtmlRenderer htmlRenderer) where T : IComponent
