@@ -20,7 +20,8 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 			.Select(kv => new PlayerStatistics(
 				kv.Key, 
 				[new Statistic("Game count", kv.Value.GameCount.ToString()), new Statistic("Most recent game", kv.Value.LatestGame.ToString("yyyy-MM-dd"))],
-				new DateTimeChart(kv.Value.McrRating.Keys.Select(d => d.ToDateTime(TimeOnly.MinValue)).ToArray(), kv.Value.McrRating.Values.Select(r => (double)r).ToArray())));
+				new DateTimeChart(kv.Value.McrRating.Keys.Select(d => d.ToDateTime(TimeOnly.MinValue)).ToArray(), kv.Value.McrRating.Values.Select(r => (double)r).ToArray()),
+				new DateTimeChart(kv.Value.RiichiRating.Keys.Select(d => d.ToDateTime(TimeOnly.MinValue)).ToArray(), kv.Value.RiichiRating.Values.Select(r => (double)r).ToArray())));
 	}
 
 	private void UpdatePlayer(Player player, Game game, GameType gameType)
@@ -38,7 +39,12 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 
 		if (gameType == GameType.Mcr)
 		{
-			stats.McrRating[game.DateOfGame] = player.NewRating;
+			stats.McrRating[game.DateOfGame] = player.NewRating; // TODO fix games on same date replacing each other
+		}
+
+		if (gameType == GameType.Riichi)
+		{
+			stats.RiichiRating[game.DateOfGame] = player.NewRating; // TODO fix games on same date replacing each other
 		}
 	}
 
@@ -49,5 +55,7 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 		public DateOnly LatestGame { get; set; }
 
 		public Dictionary<DateOnly, decimal> McrRating { get; set; } = [];
-    }
+
+		public Dictionary<DateOnly, decimal> RiichiRating { get; set; } = [];
+	}
 }
