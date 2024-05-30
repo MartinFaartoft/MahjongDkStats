@@ -2,8 +2,9 @@
 
 internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 {
+	private static readonly DateOnly ActiveThreshold = DateOnly.FromDateTime(DateTime.Now.AddYears(-1));
+
 	private readonly Dictionary<string, PlayerStats> Players = [];
-	private readonly DateOnly activeThreshold = DateOnly.FromDateTime(DateTime.Now.AddYears(-1));
 
 	public override void AppendGame(Game game, GameType gameType)
 	{
@@ -16,24 +17,15 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 	public override IEnumerable<PlayerStatistics> GetPlayerStatistics()
 	{
 		return Players
-			.Where(p => p.Value.LatestGame > activeThreshold)
+			.Where(p => p.Value.LatestGame > ActiveThreshold)
 			.Select(kv => new PlayerStatistics(
 				kv.Key,
 				[
 					new Statistic("Game count", kv.Value.GameCount.ToString()),
 					new Statistic("Most recent game", kv.Value.LatestGame.ToString("yyyy-MM-dd")),
-					new Statistic("", kv.Value.GameCount.ToString()),
 				],
-				new PlayerVariantStatistics(
-					new DateTimeChart(kv.Value.McrRating.Keys.Select(d => d.ToDateTime(TimeOnly.MinValue)).ToArray(), kv.Value.McrRating.Values.Select(r => (double)r).ToArray()),
-					kv.Value.McrGameCount,
-					kv.Value.MaxMcrRating,
-					kv.Value.LatestMcrGame),
-				new PlayerVariantStatistics(
-					new DateTimeChart(kv.Value.RiichiRating.Keys.Select(d => d.ToDateTime(TimeOnly.MinValue)).ToArray(), kv.Value.RiichiRating.Values.Select(r => (double)r).ToArray()),
-					kv.Value.RiichiGameCount,
-					kv.Value.MaxRiichiRating,
-					kv.Value.LatestRiichiGame)));
+				GetPlayerVariantStatistics(kv.Value, GameType.Mcr),
+				GetPlayerVariantStatistics(kv.Value, GameType.Riichi)));
 	}
 
 	private void UpdatePlayer(Player player, Game game, GameType gameType)
@@ -44,26 +36,36 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 		}
 
 		var stats = Players[player.Name];
+		var variantStats = gameType == GameType.Mcr ? stats.McrStats : stats.RiichiStats;
 
 		stats.GameCount++;
-
 		stats.LatestGame = stats.LatestGame > game.DateOfGame ? stats.LatestGame : game.DateOfGame;
 
-		if (gameType == GameType.Mcr)
-		{
-			stats.McrRating[game.DateOfGame] = player.NewRating; // TODO fix games on same date replacing each other
-			stats.LatestMcrGame = stats.LatestMcrGame > game.DateOfGame ? stats.LatestMcrGame : game.DateOfGame;
-			stats.MaxMcrRating = stats.MaxMcrRating > player.NewRating ? stats.MaxMcrRating : player.NewRating;
-			stats.McrGameCount++;
-		}
+		UpdatePlayerVariantStats(player, variantStats, game);
+	}
 
-		if (gameType == GameType.Riichi)
-		{
-			stats.RiichiRating[game.DateOfGame] = player.NewRating; // TODO fix games on same date replacing each other
-			stats.LatestRiichiGame = stats.LatestRiichiGame > game.DateOfGame ? stats.LatestRiichiGame : game.DateOfGame;
-			stats.MaxRiichiRating = stats.MaxRiichiRating > player.NewRating ? stats.MaxRiichiRating : player.NewRating;
-			stats.RiichiGameCount++;
-		}
+	private void UpdatePlayerVariantStats(Player player, PlayerVariantStats stats, Game game)
+	{
+		stats.Rating[game.DateOfGame] = player.NewRating; // TODO fix games on same date replacing each other
+		stats.LatestGame = stats.LatestGame > game.DateOfGame ? stats.LatestGame : game.DateOfGame;
+		stats.MaxRating = stats.MaxRating > player.NewRating ? stats.MaxRating : player.NewRating;
+		stats.GameCount++;
+		stats.WindCount += game.NumberOfWinds;
+		stats.ScoreSum += player.Score;
+	}
+
+	private PlayerVariantStatistics GetPlayerVariantStatistics(PlayerStats stats, GameType gameType)
+	{
+		var variantStats = gameType == GameType.Mcr ? stats.McrStats : stats.RiichiStats;
+
+		return new PlayerVariantStatistics(
+					new DateTimeChart(variantStats.Rating.Keys.Select(d => d.ToDateTime(TimeOnly.MinValue)).ToArray(), variantStats.Rating.Values.Select(r => (double)r).ToArray()),
+					variantStats.GameCount,
+					variantStats.MaxRating,
+					variantStats.LatestGame,
+					variantStats.ScoreSum,
+					Math.Round(variantStats.WindCount > 0 ? (decimal)variantStats.ScoreSum / variantStats.WindCount : 0, 2)
+					);
 	}
 
 	private class PlayerStats()
@@ -72,20 +74,23 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 
 		public DateOnly LatestGame { get; set; } = DateOnly.MinValue;
 
-		public DateOnly LatestMcrGame { get; set; } = DateOnly.MinValue;
+        public PlayerVariantStats McrStats { get; set; } = new PlayerVariantStats();
 
-		public DateOnly LatestRiichiGame { get; set; } = DateOnly.MinValue;
+		public PlayerVariantStats RiichiStats { get; set; } = new PlayerVariantStats();
+    }
 
-		public int McrGameCount { get; set; }
+	private class PlayerVariantStats()
+	{
+		public DateOnly LatestGame { get; set; } = DateOnly.MinValue;
 
-		public int RiichiGameCount { get; set; }
+		public int GameCount { get; set; }
 
-		public decimal MaxMcrRating { get; set; } = decimal.MinValue;
+		public int WindCount { get; set; }
 
-		public decimal MaxRiichiRating { get; set; } = decimal.MinValue;
+		public int ScoreSum { get; set; }
 
-		public Dictionary<DateOnly, decimal> McrRating { get; set; } = [];
+        public decimal MaxRating { get; set; } = decimal.MinValue;
 
-		public Dictionary<DateOnly, decimal> RiichiRating { get; set; } = [];
+		public Dictionary<DateOnly, decimal> Rating { get; set; } = [];
 	}
 }

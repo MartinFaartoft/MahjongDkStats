@@ -4,4 +4,4 @@ public record PlayerStatistics(string Name, IEnumerable<Statistic> Statistics, P
 
 public record DateTimeChart(DateTime[] X, double[] Y);
 
-public record PlayerVariantStatistics(DateTimeChart Rating, int GameCount, decimal MaxRating, DateOnly LatestGame);
+public record PlayerVariantStatistics(DateTimeChart Rating, int GameCount, decimal MaxRating, DateOnly LatestGame, int ScoreSum, decimal ScorePerWind);
