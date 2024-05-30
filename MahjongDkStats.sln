@@ -7,6 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MahjongDkStatsCalculators",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MahjongDkStats.CLI", "MahjongDkStats.CLI\MahjongDkStats.CLI.csproj", "{AD261E11-8E91-47F6-9074-0F25595DE0D8}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EF89DD97-F947-4E4C-8CB3-E05B562EE0C3}"
+	ProjectSection(SolutionItems) = preProject
+		assets\css\styles.css = assets\css\styles.css
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +29,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {79CC29BF-28A8-4123-8BA9-8160FF68A718}
 	EndGlobalSection
 EndGlobal

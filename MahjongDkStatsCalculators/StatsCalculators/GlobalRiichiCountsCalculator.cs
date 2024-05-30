@@ -16,8 +16,6 @@ internal class GlobalRiichiCountsCalculator : GlobalCountsCalculator
             new Statistic("Games", _gameCount.ToString()),
             new Statistic("Winds", _windsCount.ToString()),
 			new Statistic("Hands", _handsCount.ToString()),
-			new Statistic("Players", _uniquePlayers.Count.ToString()),
-            new Statistic("Active Players (last year)", _activePlayers.Count.ToString()),
             ];
     }
 

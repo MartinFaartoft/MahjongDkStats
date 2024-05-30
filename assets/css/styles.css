@@ -1,0 +1,11 @@
+﻿thead {
+    font-weight: bold;
+}
+
+a, a:visited {
+    color: #9C0000;
+}
+
+a:hover {
+    color: #DC0000;
+}

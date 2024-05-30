@@ -14,12 +14,7 @@ public class Program
 
     private static async Task Main(string[] args)
     {
-        if (Directory.Exists("dist"))
-        {
-            Directory.Delete("dist", true);
-        }
-        Directory.CreateDirectory("dist");
-		Directory.CreateDirectory("dist/img");
+        FileSystemHelper.PrepareFoldersAndAssets();
 
 		IServiceCollection services = new ServiceCollection();
         services.AddLogging();
