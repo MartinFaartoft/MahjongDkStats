@@ -72,10 +72,10 @@ public class Program
 			var playerHtml = await RenderPageToHtml<PlayerPage>(playerParameters, htmlRenderer);
 			await File.WriteAllTextAsync($"dist/{NameSanitizer.SanitizeForUrlUsage(player.Name)}.html", playerHtml);
 
-			var mcrRatingPlot = CreateRatingPlot(player.McrRating, $"MCR Rating - {player.Name}");
+			var mcrRatingPlot = CreateRatingPlot(player.McrStatistics.Rating, $"MCR Rating - {player.Name}");
             mcrRatingPlot.SavePng($"dist/img/{NameSanitizer.SanitizeForUrlUsage(player.Name)}-mcr-rating.png", 600, 338);
 
-			var riichiRatingPlot = CreateRatingPlot(player.RiichiRating, $"Riichi Rating - {player.Name}");
+			var riichiRatingPlot = CreateRatingPlot(player.RiichiStatistics.Rating, $"Riichi Rating - {player.Name}");
 			riichiRatingPlot.SavePng($"dist/img/{NameSanitizer.SanitizeForUrlUsage(player.Name)}-riichi-rating.png", 600, 338);
 		}
 	}

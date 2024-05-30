@@ -7,12 +7,44 @@
 
 <h1>Statistics for @PlayerStats.Name</h1>
 
-<h2>Global (across variants)</h2>
-<p>TODO</p>
 <h2>MCR</h2>
-<img src="img/@CreateMcrPlotUrl(PlayerStats)" />
+
+@if (PlayerStats.McrStatistics.GameCount > 0)
+{	
+	<table>
+		<tr>
+			<td>Game Count</td>
+			<td>@PlayerStats.McrStatistics.GameCount</td>
+		</tr>
+		<tr>
+			<td>Max Rating</td>
+			<td>@PlayerStats.McrStatistics.MaxRating</td>
+		</tr>
+	</table>
+	<img src="img/@CreateMcrPlotUrl(PlayerStats)" />
+} else
+{
+	<p>No MCR games on record</p>
+}
+
 <h2>Riichi</h2>
+@if (PlayerStats.RiichiStatistics.GameCount > 0)
+{
+	<table>
+	<tr>
+		<td>Game Count</td>
+		<td>@PlayerStats.RiichiStatistics.GameCount</td>
+	</tr>
+	<tr>
+		<td>Max Rating</td>
+		<td>@PlayerStats.RiichiStatistics.MaxRating</td>
+	</tr>
+</table>
 <img src="img/@CreateRiichiPlotUrl(PlayerStats)" />
+} else 
+{
+	<p>No Riichi games on record</p>
+}
 
 @code {
 	[Parameter]
