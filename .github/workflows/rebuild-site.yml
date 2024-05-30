@@ -3,6 +3,8 @@ name: Rebuild Site
 on:
   push:
     branches: [ "main" ]
+  schedule:
+    - cron: "0 0 * * 6"
 
 jobs:
   rebuild-site:
