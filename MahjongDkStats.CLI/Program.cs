@@ -52,8 +52,10 @@ public class Program
         var playerStatistics = statsCalculators.SelectMany(calc => calc.GetPlayerStatistics()).ToList().OrderBy(ps => ps.Name);
         IEnumerable<RatingEntry> mcrRatingList = CreateMcrRatingList(playerStatistics);
 		IEnumerable<RatingEntry> riichiRatingList = CreateRiichiRatingList(playerStatistics);
+        var newestGameDate = mcrGames.Concat(riichiGames).MaxBy(g => g.DateOfGame)!.DateOfGame;
 
-		await RenderHtmlSite(new StatisticsResult(globalStatistics, mcrStatistics, riichiStatistics, playerStatistics, mcrRatingList, riichiRatingList), htmlRenderer);
+
+		await RenderHtmlSite(new StatisticsResult(globalStatistics, mcrStatistics, riichiStatistics, playerStatistics, mcrRatingList, riichiRatingList), newestGameDate, htmlRenderer);
 
         Console.WriteLine("SSG Rebuild Complete");
     }
@@ -76,9 +78,9 @@ public class Program
 			.ToArray();
 	}
 
-	private static async Task RenderHtmlSite(StatisticsResult result, HtmlRenderer htmlRenderer)
+	private static async Task RenderHtmlSite(StatisticsResult result, DateOnly newestGameDate, HtmlRenderer htmlRenderer)
     {
-		Dictionary<string, object?> parameters = new Dictionary<string, object?> { { "Stats", result } };
+		Dictionary<string, object?> parameters = new Dictionary<string, object?> { { "Stats", result }, { "NewestGameDate", newestGameDate } };
         var html = await RenderPageToHtml<IndexPage>(parameters, htmlRenderer);
         await File.WriteAllTextAsync("dist/index.html", html);
 

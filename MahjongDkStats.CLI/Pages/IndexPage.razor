@@ -5,6 +5,7 @@
 <Header />
 <body>
 	<h1>Mahjong Danmark - Statistics</h1>
+	<p style="text-align:right;">Data from @NewestGameDate</p>
 	<h2>MCR</h2>
 	<table>
 		@foreach (var stat in Stats.McrStatistics)
@@ -89,6 +90,9 @@
 @code {
 	[Parameter]
 	public StatisticsResult Stats { get; set; } = null!;
+
+	[Parameter]
+	public DateOnly NewestGameDate { get; set; }
 
 	public string CreatePlayerUrl(string name)
 	{
