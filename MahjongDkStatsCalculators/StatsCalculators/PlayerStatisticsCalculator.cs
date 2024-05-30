@@ -52,6 +52,8 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 		stats.GameCount++;
 		stats.WindCount += game.NumberOfWinds;
 		stats.ScoreSum += player.Score;
+		stats.CurrentWinningStreak = player.Score > 0 ? stats.CurrentWinningStreak + 1 : 0;
+		stats.LongestWinningStreak = Math.Max(stats.CurrentWinningStreak, stats.LongestWinningStreak);
 		stats.GameHistory.Add(new GameHistoryEntry(game, player));
 		
 	}
@@ -69,6 +71,7 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 					currentRating,
 					variantStats.LatestGame?.DateOfGame ?? DateOnly.MinValue,
 					variantStats.ScoreSum,
+					variantStats.LongestWinningStreak,
 					scorePerWind
 					);
 	}
@@ -118,6 +121,10 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 		public int ScoreSum { get; set; }
 
         public decimal MaxRating { get; set; } = decimal.MinValue;
+
+		public int CurrentWinningStreak { get; set; }
+
+		public int LongestWinningStreak { get; set; }
 
 		public Dictionary<DateOnly, decimal> Rating { get; set; } = [];
 
