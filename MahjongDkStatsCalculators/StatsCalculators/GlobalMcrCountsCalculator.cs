@@ -13,9 +13,9 @@ internal class GlobalMcrCountsCalculator : GlobalCountsCalculator
     public override IEnumerable<Statistic> GetGlobalMcrStatistics()
     {
         return [
-            new Statistic("Games", _gameCount.ToString()),
-            new Statistic("Winds", _windsCount.ToString()),
-			new Statistic("Hands", _handsCount.ToString())
+            new Statistic("Games played", _gameCount.ToString()),
+            new Statistic("Winds played", _windsCount.ToString()),
+			new Statistic("Hands played", _handsCount.ToString())
             ];
     }
 

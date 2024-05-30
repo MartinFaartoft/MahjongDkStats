@@ -21,7 +21,7 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 			.Select(kv => new PlayerStatistics(
 				kv.Key,
 				[
-					new Statistic("Game count", kv.Value.GameCount.ToString()),
+					new Statistic("Games played", kv.Value.GameCount.ToString()),
 					new Statistic("Most recent game", kv.Value.LatestGame.ToString("yyyy-MM-dd")),
 				],
 				GetPlayerVariantStatistics(kv.Value, GameType.Mcr),
