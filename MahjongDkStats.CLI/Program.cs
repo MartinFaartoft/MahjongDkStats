@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MahjongDkStats.CLI;
+using ScottPlot;
 
 public class Program
 {
@@ -72,24 +73,15 @@ public class Program
 			var playerHtml = await RenderPageToHtml<PlayerPage>(playerParameters, htmlRenderer);
 			await File.WriteAllTextAsync($"dist/{NameSanitizer.SanitizeForUrlUsage(player.Name)}.html", playerHtml);
 
-			var mcrRatingPlot = CreateRatingPlot(player.McrStatistics.Rating, $"MCR Rating - {player.Name}");
+			var mcrRatingPlot = PlotHelper.CreateRatingPlot(player.McrStatistics.Rating, $"MCR Rating - {player.Name}");
             mcrRatingPlot.SavePng($"dist/img/{NameSanitizer.SanitizeForUrlUsage(player.Name)}-mcr-rating.png", 600, 338);
 
-			var riichiRatingPlot = CreateRatingPlot(player.RiichiStatistics.Rating, $"Riichi Rating - {player.Name}");
+			var riichiRatingPlot = PlotHelper.CreateRatingPlot(player.RiichiStatistics.Rating, $"Riichi Rating - {player.Name}");
 			riichiRatingPlot.SavePng($"dist/img/{NameSanitizer.SanitizeForUrlUsage(player.Name)}-riichi-rating.png", 600, 338);
 		}
 	}
 
-	private static ScottPlot.Plot CreateRatingPlot(DateTimeChart mcrRating, string title)
-	{
-		ScottPlot.Plot plot = new();
-		plot.Add.Scatter(mcrRating.X, mcrRating.Y);
-        plot.Title(title);
-		plot.FigureBackground.Color = ScottPlot.Color.FromHex("#F9F9F9");
-		plot.Axes.DateTimeTicksBottom();
 
-        return plot;
-	}
 
 	private static async Task<string> RenderPageToHtml<T>(Dictionary<string, object?> parameters, HtmlRenderer htmlRenderer) where T : IComponent
 	{
