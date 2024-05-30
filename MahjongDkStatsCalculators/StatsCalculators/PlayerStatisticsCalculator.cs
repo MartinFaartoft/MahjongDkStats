@@ -46,7 +46,7 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 
 	private void UpdatePlayerVariantStats(Player player, PlayerVariantStats stats, Game game)
 	{
-		stats.Rating[game.DateOfGame] = player.NewRating; // TODO fix games on same date replacing each other
+		UpdatePlayerVariantRating(player, stats, game);
 		stats.LatestGame = stats.LatestGame > game.DateOfGame ? stats.LatestGame : game.DateOfGame;
 		stats.MaxRating = stats.MaxRating > player.NewRating ? stats.MaxRating : player.NewRating;
 		stats.GameCount++;
@@ -54,18 +54,53 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 		stats.ScoreSum += player.Score;
 	}
 
+	private static void UpdatePlayerVariantRating(Player player, PlayerVariantStats stats, Game game)
+	{
+		if (stats.Rating.ContainsKey(game.DateOfGame))
+		{
+			var currentRating = stats.Rating[game.DateOfGame];
+			stats.Rating[game.DateOfGame] = player.NewRating > currentRating ? player.NewRating : currentRating;
+		}
+		else
+		{
+			stats.Rating[game.DateOfGame] = player.NewRating;
+		}
+	}
+
 	private PlayerVariantStatistics GetPlayerVariantStatistics(PlayerStats stats, GameType gameType)
 	{
 		var variantStats = gameType == GameType.Mcr ? stats.McrStats : stats.RiichiStats;
-
+		var rating = GetPlayerRatingHistory(variantStats.Rating);
+		var scorePerWind = Math.Round(variantStats.WindCount > 0 ? (decimal)variantStats.ScoreSum / variantStats.WindCount : 0, 2);
 		return new PlayerVariantStatistics(
-					new DateTimeChart(variantStats.Rating.Keys.Select(d => d.ToDateTime(TimeOnly.MinValue)).ToArray(), variantStats.Rating.Values.Select(r => (double)r).ToArray()),
+					rating,
 					variantStats.GameCount,
 					variantStats.MaxRating,
 					variantStats.LatestGame,
 					variantStats.ScoreSum,
-					Math.Round(variantStats.WindCount > 0 ? (decimal)variantStats.ScoreSum / variantStats.WindCount : 0, 2)
+					scorePerWind
 					);
+	}
+
+	private DateTimeChart GetPlayerRatingHistory(Dictionary<DateOnly, decimal> rating)
+	{
+		EnsureRatingHistoryStartsWithZero(rating);
+
+		return new DateTimeChart(
+			rating.Keys.Select(d => d.ToDateTime(TimeOnly.MinValue)).ToArray(),
+			rating.Values.Select(r => (double)r).ToArray());
+		
+	}
+
+	private void EnsureRatingHistoryStartsWithZero(Dictionary<DateOnly, decimal> rating)
+	{
+        if (rating.Count == 0)
+        {
+			return;
+        }
+
+        var minDate = rating.Keys.Min();
+		rating[minDate.AddDays(-1)] = 0M;
 	}
 
 	private class PlayerStats()
