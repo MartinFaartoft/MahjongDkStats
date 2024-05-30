@@ -8,18 +8,6 @@
 </head>
 <body>
 	<h1>Mahjong Danmark - Statistics</h1>
-
-	<h2>Global (across variants)</h2>
-	<table>
-		@foreach (var stat in Stats.GlobalStatistics)
-		{
-			<tr>
-				<td>@stat.Title</td>
-				<td>@stat.Value</td>
-			</tr>
-		}
-	</table>
-
 	<h2>MCR</h2>
 	<table>
 		@foreach (var stat in Stats.McrStatistics)
@@ -29,6 +17,29 @@
 				<td>@stat.Value</td>
 			</tr>
 		}
+	</table>
+
+	<h3>Rating List<sup><dfn style="font-style:normal; font-size: 1em; cursor: help;" title="Players are included if they have a game played within the last 12 months.">&nbsp;?</dfn></sup></h3>
+	<table>
+		<thead>
+			<tr>
+				<td>#</td>
+				<td>Name</td>
+				<td>Rating</td>
+				<td>Games played</td>
+			</tr>
+		</thead>
+		<tbody>
+		@foreach (var entry in Stats.McrRatingList)
+		{
+			<tr>
+				<td>@entry.Position</td>
+				<td><a href='@CreatePlayerUrl(entry.Name)'>@entry.Name</a></td>
+				<td>@entry.Rating</td>
+				<td>@entry.GamesPlayed</td>
+			</tr>
+		}
+		</tbody>
 	</table>
 
 	<h2>Riichi</h2>
@@ -42,20 +53,36 @@
 		}
 	</table>
 
-
-	<h2>Active Players<sup><dfn style="font-style:normal; font-size: 1em; cursor: help;" title="Players are considered active if they have a game played within the last 12 months.">&nbsp;&#9432;</dfn></sup></h2>
+	<h3>Rating List<sup><dfn style="font-style:normal; font-size: 1em; cursor: help;" title="Players are included if they have a game played within the last 12 months.">&nbsp;?</dfn></sup></h3>
 	<table>
 		<thead>
-			<td>Name</td>
-			<td>Game count</td>
-			<td>Latest game</td>
+			<tr>
+				<td>#</td>
+				<td>Name</td>
+				<td>Rating</td>
+				<td>Games played</td>
+			</tr>
 		</thead>
-		@foreach (var player in Stats.PlayerStatistics)
+		<tbody>
+			@foreach (var entry in Stats.RiichiRatingList)
+			{
+				<tr>
+					<td>@entry.Position</td>
+					<td><a href='@CreatePlayerUrl(entry.Name)'>@entry.Name</a></td>
+					<td>@entry.Rating</td>
+					<td>@entry.GamesPlayed</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+
+	<h2>Global statistics across variants</h2>
+	<table>
+		@foreach (var stat in Stats.GlobalStatistics)
 		{
 			<tr>
-				<td><a href='@CreatePlayerUrl(player)'>@player.Name</a></td>
-				<td>@player.Statistics.First().Value</td>
-				<td>@player.Statistics.Skip(1).First().Value</td>
+				<td>@stat.Title</td>
+				<td>@stat.Value</td>
 			</tr>
 		}
 	</table>
@@ -66,8 +93,8 @@
 	[Parameter]
 	public StatisticsResult Stats { get; set; } = null!;
 
-	public string CreatePlayerUrl(PlayerStatistics p)
+	public string CreatePlayerUrl(string name)
 	{
-		return MahjongDkStats.CLI.NameSanitizer.SanitizeForUrlUsage(p.Name) + ".html";
+		return MahjongDkStats.CLI.NameSanitizer.SanitizeForUrlUsage(name) + ".html";
 	}
 }

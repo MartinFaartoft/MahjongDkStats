@@ -11,6 +11,6 @@ public class GamesLoader
         
         var json = await httpClient.GetStringAsync(url);
         
-        return JsonSerializer.Deserialize<IEnumerable<Game>>(json)!;
+        return JsonSerializer.Deserialize<IEnumerable<Game>>(json)!.OrderBy(g => g.Id);
     }
 }

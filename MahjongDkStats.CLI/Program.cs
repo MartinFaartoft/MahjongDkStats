@@ -55,13 +55,33 @@ public class Program
         var mcrStatistics = statsCalculators.SelectMany(calc => calc.GetGlobalMcrStatistics()).ToList();
         var riichiStatistics = statsCalculators.SelectMany(calc => calc.GetGlobalRiichiStatistics()).ToList();
         var playerStatistics = statsCalculators.SelectMany(calc => calc.GetPlayerStatistics()).ToList().OrderBy(ps => ps.Name);
+        IEnumerable<RatingEntry> mcrRatingList = CreateMcrRatingList(playerStatistics);
+		IEnumerable<RatingEntry> riichiRatingList = CreateRiichiRatingList(playerStatistics);
 
-		await RenderHtmlSite(new StatisticsResult(globalStatistics, mcrStatistics, riichiStatistics, playerStatistics), htmlRenderer);
+		await RenderHtmlSite(new StatisticsResult(globalStatistics, mcrStatistics, riichiStatistics, playerStatistics, mcrRatingList, riichiRatingList), htmlRenderer);
 
         Console.WriteLine("SSG Rebuild Complete");
     }
 
-    private static async Task RenderHtmlSite(StatisticsResult result, HtmlRenderer htmlRenderer)
+    private static IEnumerable<RatingEntry> CreateMcrRatingList(IEnumerable<PlayerStatistics> playerStatistics)
+    {
+        return playerStatistics
+            .Where(ps => ps.McrStatistics.GameCount > 0)
+            .OrderByDescending(ps => ps.McrStatistics.CurrentRating)
+            .Select((ps, i) => new RatingEntry(ps.Name, i+1, ps.McrStatistics.CurrentRating, ps.McrStatistics.GameCount))
+            .ToArray();
+	}
+
+	private static IEnumerable<RatingEntry> CreateRiichiRatingList(IEnumerable<PlayerStatistics> playerStatistics)
+	{
+		return playerStatistics
+			.Where(ps => ps.RiichiStatistics.GameCount > 0)
+			.OrderByDescending(ps => ps.RiichiStatistics.CurrentRating)
+			.Select((ps, i) => new RatingEntry(ps.Name, i + 1, ps.RiichiStatistics.CurrentRating, ps.RiichiStatistics.GameCount))
+			.ToArray();
+	}
+
+	private static async Task RenderHtmlSite(StatisticsResult result, HtmlRenderer htmlRenderer)
     {
 		Dictionary<string, object?> parameters = new Dictionary<string, object?> { { "Stats", result } };
         var html = await RenderPageToHtml<IndexPage>(parameters, htmlRenderer);

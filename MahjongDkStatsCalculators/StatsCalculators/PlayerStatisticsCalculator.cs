@@ -46,37 +46,28 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 
 	private void UpdatePlayerVariantStats(Player player, PlayerVariantStats stats, Game game)
 	{
-		UpdatePlayerVariantRating(player, stats, game);
-		stats.LatestGame = stats.LatestGame > game.DateOfGame ? stats.LatestGame : game.DateOfGame;
+		stats.Rating[game.DateOfGame] = player.NewRating; // This overwrites previous games played on same day, potentially hiding peaks and troughs in the graph
+		stats.LatestGame = (stats.LatestGame?.DateOfGame ?? DateOnly.MinValue) > game.DateOfGame ? stats.LatestGame : game;
 		stats.MaxRating = stats.MaxRating > player.NewRating ? stats.MaxRating : player.NewRating;
 		stats.GameCount++;
 		stats.WindCount += game.NumberOfWinds;
 		stats.ScoreSum += player.Score;
-	}
-
-	private static void UpdatePlayerVariantRating(Player player, PlayerVariantStats stats, Game game)
-	{
-		if (stats.Rating.ContainsKey(game.DateOfGame))
-		{
-			var currentRating = stats.Rating[game.DateOfGame];
-			stats.Rating[game.DateOfGame] = player.NewRating > currentRating ? player.NewRating : currentRating;
-		}
-		else
-		{
-			stats.Rating[game.DateOfGame] = player.NewRating;
-		}
+		stats.GameHistory.Add(new GameHistoryEntry(game, player));
+		
 	}
 
 	private PlayerVariantStatistics GetPlayerVariantStatistics(PlayerStats stats, GameType gameType)
 	{
 		var variantStats = gameType == GameType.Mcr ? stats.McrStats : stats.RiichiStats;
 		var rating = GetPlayerRatingHistory(variantStats.Rating);
+		var currentRating = variantStats.GameHistory.OrderByDescending(x => x.Game.Id).FirstOrDefault()?.Player.NewRating ?? 0;
 		var scorePerWind = Math.Round(variantStats.WindCount > 0 ? (decimal)variantStats.ScoreSum / variantStats.WindCount : 0, 2);
 		return new PlayerVariantStatistics(
 					rating,
 					variantStats.GameCount,
 					variantStats.MaxRating,
-					variantStats.LatestGame,
+					currentRating,
+					variantStats.LatestGame?.DateOfGame ?? DateOnly.MinValue,
 					variantStats.ScoreSum,
 					scorePerWind
 					);
@@ -86,10 +77,12 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 	{
 		EnsureRatingHistoryStartsWithZero(rating);
 
+		var dates = rating.Keys.Order().ToArray();
+		var values = dates.Select(d => rating[d]);
+
 		return new DateTimeChart(
-			rating.Keys.Select(d => d.ToDateTime(TimeOnly.MinValue)).ToArray(),
-			rating.Values.Select(r => (double)r).ToArray());
-		
+			dates.Select(d => d.ToDateTime(TimeOnly.MinValue)).ToArray(),
+			values.Select(r => (double)r).ToArray());
 	}
 
 	private void EnsureRatingHistoryStartsWithZero(Dictionary<DateOnly, decimal> rating)
@@ -116,7 +109,7 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 
 	private class PlayerVariantStats()
 	{
-		public DateOnly LatestGame { get; set; } = DateOnly.MinValue;
+		public Game? LatestGame { get; set; }
 
 		public int GameCount { get; set; }
 
@@ -127,5 +120,9 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
         public decimal MaxRating { get; set; } = decimal.MinValue;
 
 		public Dictionary<DateOnly, decimal> Rating { get; set; } = [];
+
+		public List<GameHistoryEntry> GameHistory { get; } = [];
 	}
+
+	private record GameHistoryEntry(Game Game, Player Player);
 }
