@@ -2,8 +2,6 @@
 
 internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 {
-	private static readonly DateOnly ActiveThreshold = DateOnly.FromDateTime(DateTime.Now.AddYears(-1));
-
 	private readonly Dictionary<string, PlayerStats> Players = [];
 
 	public override void AppendGame(Game game, GameType gameType)
@@ -17,7 +15,7 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 	public override IEnumerable<PlayerStatistics> GetPlayerStatistics()
 	{
 		return Players
-			.Where(p => p.Value.LatestGame > ActiveThreshold)
+			.Where(p => p.Value.LatestGame > Constants.ActiveThreshold)
 			.Select(kv => new PlayerStatistics(
 				kv.Key,
 				[

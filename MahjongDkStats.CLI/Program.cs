@@ -63,7 +63,7 @@ public class Program
     private static IEnumerable<RatingEntry> CreateMcrRatingList(IEnumerable<PlayerStatistics> playerStatistics)
     {
         return playerStatistics
-            .Where(ps => ps.McrStatistics.GameCount > 0)
+            .Where(ps => ps.McrStatistics.GameCount > 0 && ps.McrStatistics.LatestGame > Constants.ActiveThreshold)
             .OrderByDescending(ps => ps.McrStatistics.CurrentRating)
             .Select((ps, i) => new RatingEntry(ps.Name, i+1, ps.McrStatistics.CurrentRating, ps.McrStatistics.GameCount))
             .ToArray();
@@ -72,7 +72,7 @@ public class Program
 	private static IEnumerable<RatingEntry> CreateRiichiRatingList(IEnumerable<PlayerStatistics> playerStatistics)
 	{
 		return playerStatistics
-			.Where(ps => ps.RiichiStatistics.GameCount > 0)
+			.Where(ps => ps.RiichiStatistics.GameCount > 0 && ps.RiichiStatistics.LatestGame > Constants.ActiveThreshold)
 			.OrderByDescending(ps => ps.RiichiStatistics.CurrentRating)
 			.Select((ps, i) => new RatingEntry(ps.Name, i + 1, ps.RiichiStatistics.CurrentRating, ps.RiichiStatistics.GameCount))
 			.ToArray();
