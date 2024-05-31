@@ -18,13 +18,13 @@
 	</table>
 
 	<h3>Rating List<sup><dfn style="font-style:normal; font-size: 1em; cursor: help;" title="Players are included if they have a game played within the last 12 months.">&nbsp;?</dfn></sup></h3>
-	<table>
+	<table class="sortable">
 		<thead>
 			<tr>
-				<td>#</td>
-				<td>Name</td>
-				<td>Rating</td>
-				<td>Games played</td>
+				<th>#</th>
+				<th>Name</th>
+				<th>Rating</th>
+				<th>Games played</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -33,7 +33,7 @@
 			<tr>
 				<td>@entry.Position</td>
 				<td><a href='@CreatePlayerUrl(entry.Name)'>@entry.Name</a></td>
-				<td>@entry.Rating</td>
+				<td data-sort="@RemoveDecimalMarker(entry.Rating)">@entry.Rating</td>
 				<td>@entry.GamesPlayed</td>
 			</tr>
 		}
@@ -52,13 +52,13 @@
 	</table>
 
 	<h3>Rating List<sup><dfn style="font-style:normal; font-size: 1em; cursor: help;" title="Players are included if they have a game played within the last 12 months.">&nbsp;?</dfn></sup></h3>
-	<table>
+	<table class="sortable">
 		<thead>
 			<tr>
-				<td>#</td>
-				<td>Name</td>
-				<td>Rating</td>
-				<td>Games played</td>
+				<th>#</th>
+				<th>Name</th>
+				<th>Rating</th>
+				<th>Games played</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -67,7 +67,7 @@
 				<tr>
 					<td>@entry.Position</td>
 					<td><a href='@CreatePlayerUrl(entry.Name)'>@entry.Name</a></td>
-					<td>@entry.Rating</td>
+					<td data-sort="@RemoveDecimalMarker(entry.Rating)">@entry.Rating</td>
 					<td>@entry.GamesPlayed</td>
 				</tr>
 			}
@@ -97,5 +97,10 @@
 	public string CreatePlayerUrl(string name)
 	{
 		return MahjongDkStats.CLI.NameSanitizer.SanitizeForUrlUsage(name) + ".html";
+	}
+
+	public string RemoveDecimalMarker(decimal value)
+	{
+		return value.ToString().Replace(",", "");
 	}
 }
