@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MahjongDkStats.CLI;
 using ScottPlot;
+using System.Globalization;
 
 public class Program
 {
@@ -15,7 +16,7 @@ public class Program
     private static async Task Main(string[] args)
     {
         FileSystemHelper.PrepareFoldersAndAssets();
-
+		CultureInfo.CurrentCulture = new CultureInfo("da-DK", false);
 		IServiceCollection services = new ServiceCollection();
         services.AddLogging();
         services.AddStatsCalculators();
