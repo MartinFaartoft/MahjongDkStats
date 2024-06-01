@@ -1,8 +1,4 @@
-﻿.sortable thead {
-    text-align: left;
-}
-
-.sortable thead th:not(.no-sort) {
+﻿.sortable thead th:not(.no-sort) {
     cursor: pointer
 }
 

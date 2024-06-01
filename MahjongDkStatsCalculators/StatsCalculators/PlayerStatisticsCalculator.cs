@@ -15,7 +15,6 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 	public override IEnumerable<PlayerStatistics> GetPlayerStatistics()
 	{
 		return Players
-			.Where(p => p.Value.LatestGame > Constants.ActiveThreshold)
 			.Select(kv => new PlayerStatistics(
 				kv.Key,
 				[
