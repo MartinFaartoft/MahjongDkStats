@@ -90,18 +90,25 @@ public class Program
         var html = await RenderPageToHtml<IndexPage>(parameters, htmlRenderer);
         await File.WriteAllTextAsync("dist/index.html", html);
 
+        var tasks = new List<Task>();
+
         foreach (var player in result.PlayerStatistics)
         {
 			Dictionary<string, object?> playerParameters = new Dictionary<string, object?> { { "PlayerStats", player } };
-			var playerHtml = await RenderPageToHtml<PlayerPage>(playerParameters, htmlRenderer);
-			await File.WriteAllTextAsync($"dist/{NameSanitizer.SanitizeForUrlUsage(player.Name)}.html", playerHtml);
+            tasks.Add(
+                RenderPageToHtml<PlayerPage>(playerParameters, htmlRenderer)
+                .ContinueWith(a => File.WriteAllTextAsync($"dist/{NameSanitizer.SanitizeForUrlUsage(player.Name)}.html", a.Result))
+                );
 
-			var mcrRatingPlot = PlotHelper.CreateRatingPlot(player.McrStatistics.Rating, $"MCR Rating - {player.Name}");
-            mcrRatingPlot.SavePng($"dist/img/{NameSanitizer.SanitizeForUrlUsage(player.Name)}-mcr-rating.png", 600, 338);
-
-			var riichiRatingPlot = PlotHelper.CreateRatingPlot(player.RiichiStatistics.Rating, $"Riichi Rating - {player.Name}");
-			riichiRatingPlot.SavePng($"dist/img/{NameSanitizer.SanitizeForUrlUsage(player.Name)}-riichi-rating.png", 600, 338);
+			tasks.Add(Task.Run(()
+                => PlotHelper.CreateRatingPlot(player.McrStatistics.Rating, $"MCR Rating - {player.Name}")
+                .SavePng($"dist/img/{NameSanitizer.SanitizeForUrlUsage(player.Name)}-mcr-rating.png", 600, 338)));
+			tasks.Add(Task.Run(()
+                => PlotHelper.CreateRatingPlot(player.RiichiStatistics.Rating, $"Riichi Rating - {player.Name}")
+                .SavePng($"dist/img/{NameSanitizer.SanitizeForUrlUsage(player.Name)}-riichi-rating.png", 600, 338)));
 		}
+
+        Task.WaitAll(tasks.ToArray());
 	}
 
 
