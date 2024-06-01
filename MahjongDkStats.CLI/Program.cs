@@ -47,12 +47,12 @@ public class Program
             }
         }
 
-        var globalStatistics = statsCalculators.SelectMany(calc => calc.GetGlobalStatistics()).ToList();
-        var mcrStatistics = statsCalculators.SelectMany(calc => calc.GetGlobalMcrStatistics()).ToList();
-        var riichiStatistics = statsCalculators.SelectMany(calc => calc.GetGlobalRiichiStatistics()).ToList();
-        var playerStatistics = statsCalculators.SelectMany(calc => calc.GetPlayerStatistics()).ToList().OrderBy(ps => ps.Name);
-        IEnumerable<RatingEntry> mcrRatingList = CreateMcrRatingList(playerStatistics);
-		IEnumerable<RatingEntry> riichiRatingList = CreateRiichiRatingList(playerStatistics);
+        var globalStatistics = statsCalculators.SelectMany(calc => calc.GetGlobalStatistics()).ToArray();
+        var mcrStatistics = statsCalculators.SelectMany(calc => calc.GetGlobalMcrStatistics()).ToArray();
+        var riichiStatistics = statsCalculators.SelectMany(calc => calc.GetGlobalRiichiStatistics()).ToArray();
+        var playerStatistics = statsCalculators.SelectMany(calc => calc.GetPlayerStatistics()).ToList().OrderBy(ps => ps.Name).ToArray();
+        RatingEntry[] mcrRatingList = CreateMcrRatingList(playerStatistics);
+		RatingEntry[] riichiRatingList = CreateRiichiRatingList(playerStatistics);
         var newestGameDate = mcrGames.Concat(riichiGames).MaxBy(g => g.DateOfGame)!.DateOfGame;
 
 
@@ -61,7 +61,7 @@ public class Program
         Console.WriteLine("SSG Rebuild Complete");
     }
 
-    private static IEnumerable<RatingEntry> CreateMcrRatingList(IEnumerable<PlayerStatistics> playerStatistics)
+    private static RatingEntry[] CreateMcrRatingList(IEnumerable<PlayerStatistics> playerStatistics)
     {
         return playerStatistics
             .Where(ps => ps.McrStatistics.GameCount > 0 && ps.McrStatistics.LatestGame > Constants.ActiveThreshold)
@@ -70,7 +70,7 @@ public class Program
             .ToArray();
 	}
 
-	private static IEnumerable<RatingEntry> CreateRiichiRatingList(IEnumerable<PlayerStatistics> playerStatistics)
+	private static RatingEntry[] CreateRiichiRatingList(IEnumerable<PlayerStatistics> playerStatistics)
 	{
 		return playerStatistics
 			.Where(ps => ps.RiichiStatistics.GameCount > 0 && ps.RiichiStatistics.LatestGame > Constants.ActiveThreshold)

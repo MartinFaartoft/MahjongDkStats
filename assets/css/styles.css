@@ -1,4 +1,8 @@
-﻿thead {
+﻿table {
+    text-align: left;
+}
+
+thead {
     font-weight: bold;
 }
 
@@ -8,4 +12,14 @@ a, a:visited {
 
 a:hover {
     color: #DC0000;
+}
+
+.helptext {
+    font-style:normal;
+    font-size: 1em;
+    cursor: help;
+}
+
+.right {
+    text-align:right;
 }
