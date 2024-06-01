@@ -80,6 +80,7 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 		var rating = GetPlayerRatingHistory(rulesetStats.Rating);
 		var headToHeadStatistics = rulesetStats.HeadToHeadStats.Values
 			.Select(h => new PlayerRulesetHeadToHeadStatistics(h.OpponentName, h.ScoreSumAgainst, Math.Round(h.ScoreSumAgainst / (decimal)h.WindsPlayedAgainst, 2), h.WindsPlayedAgainst, h.GamesPlayedAgainst))
+			.Where(h => h.GamesPlayedAgainst >= 10)
 			.OrderByDescending(h => h.ScoreSumAgainst)
 			.ToArray();
 		var currentRating = rulesetStats.GameHistory.OrderByDescending(x => x.Game.Id).FirstOrDefault()?.Player.NewRating ?? 0;
