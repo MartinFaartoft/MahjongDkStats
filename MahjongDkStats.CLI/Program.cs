@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using MahjongDkStats.CLI;
 using ScottPlot;
 using System.Globalization;
+using System.Diagnostics;
 
 public class Program
 {
@@ -26,10 +27,13 @@ public class Program
         await using var htmlRenderer = new HtmlRenderer(serviceProvider, loggerFactory);
 
         var statsCalculators = serviceProvider.GetRequiredService<IEnumerable<IStatsCalculator>>();
-        
+        var stopwatch = new Stopwatch();
+        stopwatch.Start();
         var gamesLoader = new GamesLoader();
         var mcrGames = await gamesLoader.LoadGamesAsync(McrGamesUrl);
         var riichiGames = await gamesLoader.LoadGamesAsync(RiichiGamesUrl);
+        Console.WriteLine($"Loaded game data in {stopwatch.ElapsedMilliseconds}ms");
+        stopwatch.Restart();
 
         foreach (var game in mcrGames)
         {
@@ -54,11 +58,12 @@ public class Program
         RatingEntry[] mcrRatingList = CreateMcrRatingList(playerStatistics);
 		RatingEntry[] riichiRatingList = CreateRiichiRatingList(playerStatistics);
         var newestGameDate = mcrGames.Concat(riichiGames).MaxBy(g => g.DateOfGame)!.DateOfGame;
+		Console.WriteLine($"Calculated statistics in {stopwatch.ElapsedMilliseconds}ms");
+		stopwatch.Restart();
 
 
 		await RenderHtmlSite(new StatisticsResult(globalStatistics, mcrStatistics, riichiStatistics, playerStatistics, mcrRatingList, riichiRatingList), newestGameDate, htmlRenderer);
-
-        Console.WriteLine("SSG Rebuild Complete");
+		Console.WriteLine($"Built static site in {stopwatch.ElapsedMilliseconds}ms");
     }
 
     private static RatingEntry[] CreateMcrRatingList(IEnumerable<PlayerStatistics> playerStatistics)
