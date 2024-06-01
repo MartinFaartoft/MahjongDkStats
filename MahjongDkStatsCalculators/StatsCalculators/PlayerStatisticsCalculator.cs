@@ -22,8 +22,8 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 					new Statistic("Games played", kv.Value.GameCount.ToString()),
 					new Statistic("Most recent game", kv.Value.LatestGame.ToString("yyyy-MM-dd")),
 				],
-				GetPlayerVariantStatistics(kv.Value, GameType.Mcr),
-				GetPlayerVariantStatistics(kv.Value, GameType.Riichi)));
+				GetPlayerRulesetStatistics(kv.Value, GameType.Mcr),
+				GetPlayerRulesetStatistics(kv.Value, GameType.Riichi)));
 	}
 
 	private void UpdatePlayer(Player player, Game game, GameType gameType)
@@ -34,15 +34,15 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 		}
 
 		var stats = Players[player.Name];
-		var variantStats = gameType == GameType.Mcr ? stats.McrStats : stats.RiichiStats;
+		var rulesetStats = gameType == GameType.Mcr ? stats.McrStats : stats.RiichiStats;
 
 		stats.GameCount++;
 		stats.LatestGame = stats.LatestGame > game.DateOfGame ? stats.LatestGame : game.DateOfGame;
 
-		UpdatePlayerVariantStats(player, variantStats, game);
+		UpdatePlayerRulesetStats(player, rulesetStats, game);
 	}
 
-	private void UpdatePlayerVariantStats(Player player, PlayerVariantStats stats, Game game)
+	private void UpdatePlayerRulesetStats(Player player, PlayerRulesetStats stats, Game game)
 	{
 		stats.Rating[game.DateOfGame] = player.NewRating; // This overwrites previous games played on same day, potentially hiding peaks and troughs in the graph
 		stats.LatestGame = (stats.LatestGame?.DateOfGame ?? DateOnly.MinValue) > game.DateOfGame ? stats.LatestGame : game;
@@ -56,20 +56,20 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 		
 	}
 
-	private PlayerVariantStatistics GetPlayerVariantStatistics(PlayerStats stats, GameType gameType)
+	private PlayerRulesetStatistics GetPlayerRulesetStatistics(PlayerStats stats, GameType gameType)
 	{
-		var variantStats = gameType == GameType.Mcr ? stats.McrStats : stats.RiichiStats;
-		var rating = GetPlayerRatingHistory(variantStats.Rating);
-		var currentRating = variantStats.GameHistory.OrderByDescending(x => x.Game.Id).FirstOrDefault()?.Player.NewRating ?? 0;
-		var scorePerWind = Math.Round(variantStats.WindCount > 0 ? (decimal)variantStats.ScoreSum / variantStats.WindCount : 0, 2);
-		return new PlayerVariantStatistics(
+		var rulesetStats = gameType == GameType.Mcr ? stats.McrStats : stats.RiichiStats;
+		var rating = GetPlayerRatingHistory(rulesetStats.Rating);
+		var currentRating = rulesetStats.GameHistory.OrderByDescending(x => x.Game.Id).FirstOrDefault()?.Player.NewRating ?? 0;
+		var scorePerWind = Math.Round(rulesetStats.WindCount > 0 ? (decimal)rulesetStats.ScoreSum / rulesetStats.WindCount : 0, 2);
+		return new PlayerRulesetStatistics(
 					rating,
-					variantStats.GameCount,
-					variantStats.MaxRating,
+					rulesetStats.GameCount,
+					rulesetStats.MaxRating,
 					currentRating,
-					variantStats.LatestGame?.DateOfGame ?? DateOnly.MinValue,
-					variantStats.ScoreSum,
-					variantStats.LongestWinningStreak,
+					rulesetStats.LatestGame?.DateOfGame ?? DateOnly.MinValue,
+					rulesetStats.ScoreSum,
+					rulesetStats.LongestWinningStreak,
 					scorePerWind
 					);
 	}
@@ -103,12 +103,12 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 
 		public DateOnly LatestGame { get; set; } = DateOnly.MinValue;
 
-        public PlayerVariantStats McrStats { get; set; } = new PlayerVariantStats();
+        public PlayerRulesetStats McrStats { get; set; } = new PlayerRulesetStats();
 
-		public PlayerVariantStats RiichiStats { get; set; } = new PlayerVariantStats();
+		public PlayerRulesetStats RiichiStats { get; set; } = new PlayerRulesetStats();
     }
 
-	private class PlayerVariantStats()
+	private class PlayerRulesetStats()
 	{
 		public Game? LatestGame { get; set; }
 
