@@ -34,4 +34,7 @@ public static class Helpers
 			Ruleset.Mcr => "MCR",
 			_ => throw new NotImplementedException()
 		};
+
+	public static string ShortenName(string name)
+		=> name.Substring(0, name.IndexOf(" ") + 2);
 }

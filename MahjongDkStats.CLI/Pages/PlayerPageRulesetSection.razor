@@ -28,6 +28,34 @@
 	</table>
 	<img src="img/@Helpers.CreatePlotUrl(@PlayerName, @RulesetStatistics.Ruleset)" />
 
+	<h3>Latest games</h3>
+	<table>
+		<thead>
+			<tr>
+				<th>Date</th>
+				<th>Diff.</th>
+				<th>Winds</th>
+				<th rowspan="7">Players</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var game in RulesetStatistics.GameHistory.TakeLast(10).OrderByDescending(g => g.Id))
+			{
+				<tr>
+					<td>@game.DateOfGame</td>
+					<td>@game.Difficulty</td>
+					<td>@game.NumberOfWinds</td>
+					@foreach(var player in game.Players)
+					{
+						<td class="single-line">
+							<a href='@Helpers.CreatePlayerUrl(player.Name)'>@Helpers.ShortenName(player.Name)</a><br /> @player.Score
+						</td>
+					}
+				</tr>
+			}
+		</tbody>
+	</table>
+
 	<h3>Head to Head statistics</h3>
 	<table class="sortable">
 		<thead>

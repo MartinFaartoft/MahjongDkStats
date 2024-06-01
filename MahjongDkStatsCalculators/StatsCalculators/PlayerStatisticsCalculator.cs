@@ -29,7 +29,7 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 	{
 		if (!Players.ContainsKey(player.Name))
 		{
-			Players[player.Name] = new PlayerStats();
+			Players[player.Name] = new PlayerStats(player.Name);
 		}
 
 		var stats = Players[player.Name];
@@ -51,7 +51,7 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 		stats.ScoreSum += player.Score;
 		stats.CurrentWinningStreak = player.Score > 0 ? stats.CurrentWinningStreak + 1 : 0;
 		stats.LongestWinningStreak = Math.Max(stats.CurrentWinningStreak, stats.LongestWinningStreak);
-		stats.GameHistory.Add(new GameHistoryEntry(game, player));	
+		stats.GameHistory.Add(game);	
 	}
 
 	private void UpdatePlayerRulesetHeadToHeadStats(Player player, PlayerRulesetStats stats, Game game)
@@ -79,11 +79,11 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 		var rating = GetPlayerRatingHistory(rulesetStats.Rating);
 		var headToHeadStatistics = rulesetStats.HeadToHeadStats.Values
 			.Select(h => new PlayerRulesetHeadToHeadStatistics(h.OpponentName, h.ScoreSumAgainst, Math.Round(h.ScoreSumAgainst / (decimal)h.WindsPlayedAgainst, 2), h.WindsPlayedAgainst, h.GamesPlayedAgainst))
-			.Where(h => h.GamesPlayedAgainst >= 10)
+			.Where(h => h.WindsPlayedAgainst >= 25)
 			.OrderByDescending(h => h.ScoreSumAgainst)
 			.ToArray();
-		var latestGame = rulesetStats.GameHistory.OrderByDescending(x => x.Game.Id).FirstOrDefault();
-		var currentRating = latestGame?.Player.NewRating ?? 0;
+		var latestGame = rulesetStats.GameHistory.LastOrDefault();
+		var currentRating = latestGame?.Players.First(p => p.Name == stats.Name).NewRating ?? 0;
 		var scorePerWind = Math.Round(rulesetStats.WindCount > 0 ? (decimal)rulesetStats.ScoreSum / rulesetStats.WindCount : 0, 2);
 		return new PlayerRulesetStatistics(
 					ruleset,
@@ -91,11 +91,12 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 					rulesetStats.GameCount,
 					rulesetStats.MaxRating,
 					currentRating,
-					latestGame?.Game.DateOfGame ?? DateOnly.MinValue,
+					latestGame?.DateOfGame ?? DateOnly.MinValue,
 					rulesetStats.ScoreSum,
 					rulesetStats.LongestWinningStreak,
 					scorePerWind,
-					headToHeadStatistics
+					headToHeadStatistics,
+					rulesetStats.GameHistory
 					);
 	}
 
@@ -122,9 +123,11 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 		rating[minDate.AddDays(-1)] = 0M;
 	}
 
-	private class PlayerStats()
+	private class PlayerStats(string name)
 	{
-		public int GameCount { get; set; }
+		public string Name { get; set; } = name;
+
+        public int GameCount { get; set; }
 
 		public DateOnly LatestGame { get; set; } = DateOnly.MinValue;
 
@@ -151,7 +154,7 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 
 		public Dictionary<string, PlayerRulesetHeadToHeadStats> HeadToHeadStats { get; set; } = [];
 
-        public List<GameHistoryEntry> GameHistory { get; } = [];
+        public List<Game> GameHistory { get; } = [];
 	}
 
 	private class PlayerRulesetHeadToHeadStats()
@@ -164,6 +167,4 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 
         public int WindsPlayedAgainst { get; set; }
     }
-
-	private record GameHistoryEntry(Game Game, Player Player);
 }
