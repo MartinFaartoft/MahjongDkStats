@@ -5,82 +5,14 @@
 <body>
 <h1>Statistics for @PlayerStats.Name</h1>
 
-<h2>MCR</h2>
+<PlayerPageRulesetSection PlayerName="@PlayerStats.Name" RulesetStatistics="@PlayerStats.McrStatistics" />
 
-@if (PlayerStats.McrStatistics.GameCount > 0)
-{	
-	<table>
-		<tr>
-			<td>Games played</td>
-			<td>@PlayerStats.McrStatistics.GameCount</td>
-		</tr>
-		<tr>
-			<td>Highest rating ever</td>
-			<td>@PlayerStats.McrStatistics.MaxRating</td>
-		</tr>
-		<tr>
-			<td>Score sum</td>
-			<td>@PlayerStats.McrStatistics.ScoreSum</td>
-		</tr>
-		<tr>
-				<td>Longest winning streak<sup><dfn style="font-style:normal; font-size: 1em; cursor: help;" title="Consecutive games with positive score.">&nbsp;?</dfn></sup></td>
-			<td>@PlayerStats.McrStatistics.LongestWinningStreak</td>
-		</tr>
-		<tr>
-			<td>Score per wind</td>
-			<td>@PlayerStats.McrStatistics.ScorePerWind</td>
-		</tr>
-	</table>
-	<img src="img/@CreateMcrPlotUrl(PlayerStats)" />
-} else
-{
-	<p>No MCR games on record</p>
-}
+<PlayerPageRulesetSection PlayerName="@PlayerStats.Name" RulesetStatistics="@PlayerStats.RiichiStatistics" />
 
-<h2>Riichi</h2>
-@if (PlayerStats.RiichiStatistics.GameCount > 0)
-{
-	<table>
-	<tr>
-		<td>Games played</td>
-		<td>@PlayerStats.RiichiStatistics.GameCount</td>
-	</tr>
-	<tr>
-		<td>Highest Rating</td>
-		<td>@PlayerStats.RiichiStatistics.MaxRating</td>
-	</tr>
-	<tr>
-		<td>Score sum</td>
-		<td>@PlayerStats.RiichiStatistics.ScoreSum</td>
-	</tr>
-	<tr>
-		<td>Longest winning streak<sup><dfn style="font-style:normal; font-size: 1em; cursor: help;" title="Consecutive games with positive score.">&nbsp;?</dfn></sup></td>
-		<td>@PlayerStats.RiichiStatistics.LongestWinningStreak</td>
-	</tr>
-	<tr>
-		<td>Score per wind</td>
-		<td>@PlayerStats.RiichiStatistics.ScorePerWind</td>
-	</tr>
-</table>
-<img src="img/@CreateRiichiPlotUrl(PlayerStats)" />
-} else 
-{
-	<p>No Riichi games on record</p>
-}
 </body>
 </html>
 
 @code {
 	[Parameter]
 	public PlayerStatistics PlayerStats { get; set; } = null!;
-
-	public string CreateMcrPlotUrl(PlayerStatistics p)
-	{
-		return MahjongDkStats.CLI.NameSanitizer.SanitizeForUrlUsage(p.Name) + "-mcr-rating.png";
-	}
-
-	public string CreateRiichiPlotUrl(PlayerStatistics p)
-	{
-		return MahjongDkStats.CLI.NameSanitizer.SanitizeForUrlUsage(p.Name) + "-riichi-rating.png";
-	}
 }

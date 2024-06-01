@@ -1,0 +1,42 @@
+﻿@using MahjongDkStatsCalculators
+
+<h2>@Helpers.GetRulesetName(RulesetStatistics.Ruleset)</h2>
+
+@if (RulesetStatistics.GameCount > 0)
+{	
+	<table>
+		<tr>
+			<td>Games played</td>
+			<td>@RulesetStatistics.GameCount</td>
+		</tr>
+		<tr>
+			<td>Highest rating ever</td>
+			<td>@RulesetStatistics.MaxRating</td>
+		</tr>
+		<tr>
+			<td>Score sum</td>
+			<td>@RulesetStatistics.ScoreSum</td>
+		</tr>
+		<tr>
+				<td>Longest winning streak<sup><dfn style="font-style:normal; font-size: 1em; cursor: help;" title="Consecutive games with positive score.">&nbsp;?</dfn></sup></td>
+			<td>@RulesetStatistics.LongestWinningStreak</td>
+		</tr>
+		<tr>
+			<td>Score per wind</td>
+			<td>@RulesetStatistics.ScorePerWind</td>
+		</tr>
+	</table>
+	<img src="img/@Helpers.CreatePlotUrl(@PlayerName, @RulesetStatistics.Ruleset)" />
+} else
+{
+	<p>No @Helpers.GetRulesetName(RulesetStatistics.Ruleset) games on record</p>
+}
+
+@code {
+	[Parameter]
+	public string PlayerName { get; set; } = null!;
+
+	[Parameter]
+	public PlayerRulesetStatistics RulesetStatistics { get; set; } = null!;
+}
+
