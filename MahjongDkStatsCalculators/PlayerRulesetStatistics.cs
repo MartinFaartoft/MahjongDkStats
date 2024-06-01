@@ -9,4 +9,7 @@ public record PlayerRulesetStatistics(
 	DateOnly LatestGame,
 	int ScoreSum,
 	int LongestWinningStreak,
-	decimal ScorePerWind);
+	decimal ScorePerWind, 
+	IEnumerable<PlayerRulesetHeadToHeadStatistics> HeadToHeadStatistics);
+
+public record PlayerRulesetHeadToHeadStatistics(string OpponentName, int ScoreSumAgainst, decimal ScorePerWindAgainst, int WindsPlayedAgainst, int GamesPlayedAgainst);

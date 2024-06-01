@@ -40,6 +40,7 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 		stats.LatestGame = stats.LatestGame > game.DateOfGame ? stats.LatestGame : game.DateOfGame;
 
 		UpdatePlayerRulesetStats(player, rulesetStats, game);
+		UpdatePlayerRulesetHeadToHeadStats(player, rulesetStats, game);
 	}
 
 	private void UpdatePlayerRulesetStats(Player player, PlayerRulesetStats stats, Game game)
@@ -52,14 +53,36 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 		stats.ScoreSum += player.Score;
 		stats.CurrentWinningStreak = player.Score > 0 ? stats.CurrentWinningStreak + 1 : 0;
 		stats.LongestWinningStreak = Math.Max(stats.CurrentWinningStreak, stats.LongestWinningStreak);
-		stats.GameHistory.Add(new GameHistoryEntry(game, player));
-		
+		stats.GameHistory.Add(new GameHistoryEntry(game, player));	
+	}
+
+	private void UpdatePlayerRulesetHeadToHeadStats(Player player, PlayerRulesetStats stats, Game game)
+	{
+		var h = stats.HeadToHeadStats;
+
+		foreach (var opponent in game.Players.Where(p => p.Name != player.Name))
+		{
+			if (!h.ContainsKey(opponent.Name))
+			{
+				h[opponent.Name] = new PlayerRulesetHeadToHeadStats { OpponentName = opponent.Name };
+			}
+
+			var s = h[opponent.Name];
+
+			s.ScoreSumAgainst += player.Score;
+			s.WindsPlayedAgainst += game.NumberOfWinds;
+			s.GamesPlayedAgainst += 1;
+		}
 	}
 
 	private PlayerRulesetStatistics GetPlayerRulesetStatistics(PlayerStats stats, Ruleset ruleset)
 	{
 		var rulesetStats = ruleset == Ruleset.Mcr ? stats.McrStats : stats.RiichiStats;
 		var rating = GetPlayerRatingHistory(rulesetStats.Rating);
+		var headToHeadStatistics = rulesetStats.HeadToHeadStats.Values
+			.Select(h => new PlayerRulesetHeadToHeadStatistics(h.OpponentName, h.ScoreSumAgainst, Math.Round(h.ScoreSumAgainst / (decimal)h.WindsPlayedAgainst, 2), h.WindsPlayedAgainst, h.GamesPlayedAgainst))
+			.OrderByDescending(h => h.ScoreSumAgainst)
+			.ToArray();
 		var currentRating = rulesetStats.GameHistory.OrderByDescending(x => x.Game.Id).FirstOrDefault()?.Player.NewRating ?? 0;
 		var scorePerWind = Math.Round(rulesetStats.WindCount > 0 ? (decimal)rulesetStats.ScoreSum / rulesetStats.WindCount : 0, 2);
 		return new PlayerRulesetStatistics(
@@ -71,7 +94,8 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 					rulesetStats.LatestGame?.DateOfGame ?? DateOnly.MinValue,
 					rulesetStats.ScoreSum,
 					rulesetStats.LongestWinningStreak,
-					scorePerWind
+					scorePerWind,
+					headToHeadStatistics
 					);
 	}
 
@@ -127,8 +151,21 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 
 		public Dictionary<DateOnly, decimal> Rating { get; set; } = [];
 
-		public List<GameHistoryEntry> GameHistory { get; } = [];
+		public Dictionary<string, PlayerRulesetHeadToHeadStats> HeadToHeadStats { get; set; } = [];
+
+        public List<GameHistoryEntry> GameHistory { get; } = [];
 	}
+
+	private class PlayerRulesetHeadToHeadStats()
+	{
+		public string OpponentName { get; set; } = string.Empty;
+
+        public int ScoreSumAgainst { get; set; }
+
+        public int GamesPlayedAgainst { get; set; }
+
+        public int WindsPlayedAgainst { get; set; }
+    }
 
 	private record GameHistoryEntry(Game Game, Player Player);
 }

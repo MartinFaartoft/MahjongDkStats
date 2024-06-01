@@ -27,6 +27,31 @@
 		</tr>
 	</table>
 	<img src="img/@Helpers.CreatePlotUrl(@PlayerName, @RulesetStatistics.Ruleset)" />
+
+	<h3>Head to Head statistics</h3>
+	<table class="sortable">
+		<thead>
+			<tr>
+				<th>Opponent</th>
+				<th aria-sort="descending">Score sum</th>
+				<th>Score / wind</th>
+				<th>Games</th>
+				<th>Winds</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var entry in RulesetStatistics.HeadToHeadStatistics)
+			{
+				<tr>
+					<td><a href='@Helpers.CreatePlayerUrl(entry.OpponentName)'>@entry.OpponentName</a></td>
+					<td>@entry.ScoreSumAgainst</td>
+					<td data-sort="@Helpers.RemoveDecimalMarker(entry.ScorePerWindAgainst)">@entry.ScorePerWindAgainst</td>
+					<td>@entry.GamesPlayedAgainst</td>
+					<td>@entry.WindsPlayedAgainst</td>
+				</tr>
+			}
+		</tbody>
+	</table>
 } else
 {
 	<p>No @Helpers.GetRulesetName(RulesetStatistics.Ruleset) games on record</p>
