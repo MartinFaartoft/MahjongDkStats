@@ -45,7 +45,6 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 	private void UpdatePlayerRulesetStats(Player player, PlayerRulesetStats stats, Game game)
 	{
 		stats.Rating[game.DateOfGame] = player.NewRating; // This overwrites previous games played on same day, potentially hiding peaks and troughs in the graph
-		stats.LatestGame = (stats.LatestGame?.DateOfGame ?? DateOnly.MinValue) > game.DateOfGame ? stats.LatestGame : game;
 		stats.MaxRating = stats.MaxRating > player.NewRating ? stats.MaxRating : player.NewRating;
 		stats.GameCount++;
 		stats.WindCount += game.NumberOfWinds;
@@ -83,7 +82,8 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 			.Where(h => h.GamesPlayedAgainst >= 10)
 			.OrderByDescending(h => h.ScoreSumAgainst)
 			.ToArray();
-		var currentRating = rulesetStats.GameHistory.OrderByDescending(x => x.Game.Id).FirstOrDefault()?.Player.NewRating ?? 0;
+		var latestGame = rulesetStats.GameHistory.OrderByDescending(x => x.Game.Id).FirstOrDefault();
+		var currentRating = latestGame?.Player.NewRating ?? 0;
 		var scorePerWind = Math.Round(rulesetStats.WindCount > 0 ? (decimal)rulesetStats.ScoreSum / rulesetStats.WindCount : 0, 2);
 		return new PlayerRulesetStatistics(
 					ruleset,
@@ -91,7 +91,7 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 					rulesetStats.GameCount,
 					rulesetStats.MaxRating,
 					currentRating,
-					rulesetStats.LatestGame?.DateOfGame ?? DateOnly.MinValue,
+					latestGame?.Game.DateOfGame ?? DateOnly.MinValue,
 					rulesetStats.ScoreSum,
 					rulesetStats.LongestWinningStreak,
 					scorePerWind,
@@ -135,8 +135,6 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 
 	private class PlayerRulesetStats()
 	{
-		public Game? LatestGame { get; set; }
-
 		public int GameCount { get; set; }
 
 		public int WindCount { get; set; }
