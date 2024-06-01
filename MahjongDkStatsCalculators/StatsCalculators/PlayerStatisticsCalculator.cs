@@ -4,11 +4,11 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 {
 	private readonly Dictionary<string, PlayerStats> Players = [];
 
-	public override void AppendGame(Game game, GameType gameType)
+	public override void AppendGame(Game game, Ruleset ruleset)
 	{
 		foreach(var player in game.Players)
 		{
-			UpdatePlayer(player, game, gameType);
+			UpdatePlayer(player, game, ruleset);
 		}
 	}
 
@@ -22,11 +22,11 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 					new Statistic("Games played", kv.Value.GameCount.ToString()),
 					new Statistic("Most recent game", kv.Value.LatestGame.ToString("yyyy-MM-dd")),
 				],
-				GetPlayerRulesetStatistics(kv.Value, GameType.Mcr),
-				GetPlayerRulesetStatistics(kv.Value, GameType.Riichi)));
+				GetPlayerRulesetStatistics(kv.Value, Ruleset.Mcr),
+				GetPlayerRulesetStatistics(kv.Value, Ruleset.Riichi)));
 	}
 
-	private void UpdatePlayer(Player player, Game game, GameType gameType)
+	private void UpdatePlayer(Player player, Game game, Ruleset ruleset)
 	{
 		if (!Players.ContainsKey(player.Name))
 		{
@@ -34,7 +34,7 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 		}
 
 		var stats = Players[player.Name];
-		var rulesetStats = gameType == GameType.Mcr ? stats.McrStats : stats.RiichiStats;
+		var rulesetStats = ruleset == Ruleset.Mcr ? stats.McrStats : stats.RiichiStats;
 
 		stats.GameCount++;
 		stats.LatestGame = stats.LatestGame > game.DateOfGame ? stats.LatestGame : game.DateOfGame;
@@ -56,13 +56,14 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 		
 	}
 
-	private PlayerRulesetStatistics GetPlayerRulesetStatistics(PlayerStats stats, GameType gameType)
+	private PlayerRulesetStatistics GetPlayerRulesetStatistics(PlayerStats stats, Ruleset ruleset)
 	{
-		var rulesetStats = gameType == GameType.Mcr ? stats.McrStats : stats.RiichiStats;
+		var rulesetStats = ruleset == Ruleset.Mcr ? stats.McrStats : stats.RiichiStats;
 		var rating = GetPlayerRatingHistory(rulesetStats.Rating);
 		var currentRating = rulesetStats.GameHistory.OrderByDescending(x => x.Game.Id).FirstOrDefault()?.Player.NewRating ?? 0;
 		var scorePerWind = Math.Round(rulesetStats.WindCount > 0 ? (decimal)rulesetStats.ScoreSum / rulesetStats.WindCount : 0, 2);
 		return new PlayerRulesetStatistics(
+					ruleset,
 					rating,
 					rulesetStats.GameCount,
 					rulesetStats.MaxRating,

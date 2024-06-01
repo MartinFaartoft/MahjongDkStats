@@ -2,11 +2,11 @@
 
 internal class GlobalMcrCountsCalculator : GlobalCountsCalculator
 {
-    public override void AppendGame(Game game, GameType gameType)
+    public override void AppendGame(Game game, Ruleset ruleset)
     {
-        if (gameType == GameType.Mcr)
+        if (ruleset == Ruleset.Mcr)
         {
-            base.AppendGame(game, GameType.Mcr);
+            base.AppendGame(game, Ruleset.Mcr);
         }
     }
 

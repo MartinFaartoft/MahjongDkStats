@@ -12,12 +12,12 @@ internal class HighestScoreCalculator : StatisticsCalculatorBase
 	private Player _highestRiichiRating = new Player(string.Empty, int.MinValue, decimal.MinValue, decimal.MinValue);
 	private Player _highestRecentRiichiRating = new Player(string.Empty, int.MinValue, decimal.MinValue, decimal.MinValue);
 
-	public override void AppendGame(Game game, GameType gameType)
+	public override void AppendGame(Game game, Ruleset ruleset)
 	{
 		var highest = game.Players.MaxBy(p => p.Score)!;
 		var highestRating = game.Players.MaxBy(p => p.NewRating)!;
 
-		if (gameType == GameType.Mcr)
+		if (ruleset == Ruleset.Mcr)
 		{
 			_highestMcrScore = SelectHighestScore(_highestMcrScore, highest);
 			_highestMcrRating = SelectHighestRating(_highestMcrRating, highestRating);
@@ -28,7 +28,7 @@ internal class HighestScoreCalculator : StatisticsCalculatorBase
 				_highestRecentMcrRating = SelectHighestRating(_highestRecentMcrRating, highestRating);
 			}
 		}
-		else if (gameType == GameType.Riichi)
+		else if (ruleset == Ruleset.Riichi)
 		{
 			_highestRiichiScore = SelectHighestScore(_highestRiichiScore, highest);
 			_highestRiichiRating = SelectHighestRating(_highestRiichiRating, highestRating);

@@ -6,7 +6,7 @@ internal class GlobalCountsCalculator : StatisticsCalculatorBase
 	protected int _windsCount = 0;
 	protected int _handsCount = 0;
 
-    public override void AppendGame(Game game, GameType gameType)
+    public override void AppendGame(Game game, Ruleset ruleset)
     {
         _gameCount++;
         _windsCount += game.NumberOfWinds;

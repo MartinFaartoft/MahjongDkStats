@@ -2,11 +2,11 @@
 
 internal class GlobalRiichiCountsCalculator : GlobalCountsCalculator
 {
-    public override void AppendGame(Game game, GameType gameType)
+    public override void AppendGame(Game game, Ruleset ruleset)
     {
-        if (gameType == GameType.Riichi)
+        if (ruleset == Ruleset.Riichi)
         {
-            base.AppendGame(game, GameType.Riichi);
+            base.AppendGame(game, Ruleset.Riichi);
         }
     }
 

@@ -1,10 +1,16 @@
 ﻿namespace MahjongDkStatsCalculators;
 
-public record PlayerStatistics(string Name, IEnumerable<Statistic> Statistics, PlayerRulesetStatistics McrStatistics, PlayerRulesetStatistics RiichiStatistics);
+public record PlayerStatistics(
+	string Name,
+	IEnumerable<Statistic> Statistics, 
+	PlayerRulesetStatistics McrStatistics, 
+	PlayerRulesetStatistics RiichiStatistics
+	);
 
 public record DateTimeChart(DateTime[] X, double[] Y);
 
 public record PlayerRulesetStatistics(
+	Ruleset Ruleset,
 	DateTimeChart Rating,
 	int GameCount,
 	decimal MaxRating,

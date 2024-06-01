@@ -35,7 +35,7 @@ public class Program
         {
             foreach (var calc in statsCalculators)
             {
-                calc.AppendGame(game, GameType.Mcr);
+                calc.AppendGame(game, Ruleset.Mcr);
             }
         }
 
@@ -43,7 +43,7 @@ public class Program
         {
             foreach (var calc in statsCalculators)
             {
-                calc.AppendGame(game, GameType.Riichi);
+                calc.AppendGame(game, Ruleset.Riichi);
             }
         }
 

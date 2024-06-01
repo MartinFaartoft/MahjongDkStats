@@ -2,7 +2,7 @@
 
 public interface IStatsCalculator
 {
-    void AppendGame(Game game, GameType gameType);
+    void AppendGame(Game game, Ruleset ruleset);
 
     IEnumerable<Statistic> GetGlobalStatistics();
 

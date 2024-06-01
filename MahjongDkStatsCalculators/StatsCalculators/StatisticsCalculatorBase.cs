@@ -2,7 +2,7 @@
 
 internal abstract class StatisticsCalculatorBase : IStatsCalculator
 {
-    public abstract void AppendGame(Game game, GameType gameType);
+    public abstract void AppendGame(Game game, Ruleset ruleset);
     public virtual IEnumerable<Statistic> GetGlobalStatistics() => [];
     public virtual IEnumerable<Statistic> GetGlobalMcrStatistics() => [];
     public virtual IEnumerable<Statistic> GetGlobalRiichiStatistics() => [];

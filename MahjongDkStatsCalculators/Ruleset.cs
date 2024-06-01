@@ -1,6 +1,6 @@
 ﻿namespace MahjongDkStatsCalculators;
 
-public enum GameType
+public enum Ruleset
 {
     Mcr,
     Riichi,
