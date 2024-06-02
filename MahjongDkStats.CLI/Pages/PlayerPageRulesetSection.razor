@@ -3,7 +3,8 @@
 <h2>@Helpers.GetRulesetName(RulesetStatistics.Ruleset)</h2>
 
 @if (RulesetStatistics.GameCount > 0)
-{	
+{
+	var highestRatingListPositionEntry = RulesetStatistics.RatingListPositionHistory.MinBy(rlph => rlph.RatingListPosition)!;
 	<table>
 		<tr>
 			<td>Games played</td>
@@ -12,6 +13,10 @@
 		<tr>
 			<td>Highest rating ever</td>
 			<td>@RulesetStatistics.MaxRating</td>
+		</tr>
+		<tr>
+			<td>Highest rating list position ever</td>
+			<td>#@highestRatingListPositionEntry.RatingListPosition on @highestRatingListPositionEntry.StartDate</td>
 		</tr>
 		<tr>
 			<td>Score sum</td>

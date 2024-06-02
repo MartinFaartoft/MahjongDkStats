@@ -1,4 +1,6 @@
-﻿namespace MahjongDkStatsCalculators;
+﻿using MahjongDkStatsCalculators.StatsCalculators;
+
+namespace MahjongDkStatsCalculators;
 
 public record PlayerRulesetStatistics(
 	Ruleset Ruleset,
@@ -11,6 +13,5 @@ public record PlayerRulesetStatistics(
 	int LongestWinningStreak,
 	decimal ScorePerWind, 
 	IEnumerable<PlayerRulesetHeadToHeadStatistics> HeadToHeadStatistics,
-	IEnumerable<Game> GameHistory);
-
-public record PlayerRulesetHeadToHeadStatistics(string OpponentName, int ScoreSumAgainst, decimal ScorePerWindAgainst, int WindsPlayedAgainst, int GamesPlayedAgainst);
+	IEnumerable<Game> GameHistory,
+	IEnumerable<PlayerRatingListPositionEntry> RatingListPositionHistory);

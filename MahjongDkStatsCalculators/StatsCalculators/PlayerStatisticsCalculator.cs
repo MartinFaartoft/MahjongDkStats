@@ -3,12 +3,23 @@
 internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 {
 	private readonly Dictionary<string, PlayerStats> Players = [];
+	private PlayerRatingListPositionCalculator _mcrRatingListPositionCalculator = new();
+	private PlayerRatingListPositionCalculator _riichiRatingListPositionCalculator = new();
 
 	public override void AppendGame(Game game, Ruleset ruleset)
 	{
 		foreach(var player in game.Players)
 		{
 			UpdatePlayer(player, game, ruleset);
+		}
+
+		if (ruleset == Ruleset.Mcr)
+		{
+			_mcrRatingListPositionCalculator.AddGame(game);
+		}
+		else
+		{
+			_riichiRatingListPositionCalculator.AddGame(game);
 		}
 	}
 
@@ -77,6 +88,9 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 	{
 		var rulesetStats = ruleset == Ruleset.Mcr ? stats.McrStats : stats.RiichiStats;
 		var rating = GetPlayerRatingHistory(rulesetStats.Rating);
+		var ratingListPositionHistory = ruleset == Ruleset.Mcr
+			? _mcrRatingListPositionCalculator.GetRatingListPositionHistory(stats.Name)
+			: _riichiRatingListPositionCalculator.GetRatingListPositionHistory(stats.Name);
 		var headToHeadStatistics = rulesetStats.HeadToHeadStats.Values
 			.Select(h => new PlayerRulesetHeadToHeadStatistics(h.OpponentName, h.ScoreSumAgainst, Math.Round(h.ScoreSumAgainst / (decimal)h.WindsPlayedAgainst, 2), h.WindsPlayedAgainst, h.GamesPlayedAgainst))
 			.Where(h => h.WindsPlayedAgainst >= 25)
@@ -96,7 +110,8 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 					rulesetStats.LongestWinningStreak,
 					scorePerWind,
 					headToHeadStatistics,
-					rulesetStats.GameHistory
+					rulesetStats.GameHistory,
+					ratingListPositionHistory
 					);
 	}
 
