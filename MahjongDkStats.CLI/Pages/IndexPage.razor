@@ -6,7 +6,8 @@
 <body>
 	<h1>Mahjong Danmark - Statistics</h1>
 	<p class="right">@NewestGameDate</p>
-	<h2>MCR</h2>
+	<h2 id="mcr">MCR</h2>
+	<h3>Records</h3>
 	<table>
 		@foreach (var stat in Stats.McrStatistics)
 		{
@@ -40,7 +41,8 @@
 		</tbody>
 	</table>
 
-	<h2>Riichi</h2>
+	<h2 id="riichi">Riichi</h2>
+	<h3>Records</h3>
 	<table>
 		@foreach (var stat in Stats.RiichiStatistics)
 		{
@@ -74,7 +76,7 @@
 		</tbody>
 	</table>
 
-	<h2>Global statistics across rulesets</h2>
+	<h2>Statistics across rulesets</h2>
 	<table>
 		@foreach (var stat in Stats.GlobalStatistics)
 		{
@@ -84,6 +86,7 @@
 			</tr>
 		}
 	</table>
+	<Footer />
 </body>
 </html>
 

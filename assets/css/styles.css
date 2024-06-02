@@ -32,3 +32,7 @@ a:hover {
 .highlight {
     font-weight: bold;
 }
+
+.center {
+    text-align: center;
+}

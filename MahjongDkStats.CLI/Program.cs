@@ -90,6 +90,10 @@ public class Program
         var html = await RenderPageToHtml<IndexPage>(parameters, htmlRenderer);
         await File.WriteAllTextAsync("dist/index.html", html);
 
+        var aboutHtml = await RenderPageToHtml<AboutPage>([], htmlRenderer);
+        await File.WriteAllTextAsync("dist/about.html", aboutHtml);
+
+
         var tasks = new List<Task>();
 
         foreach (var player in result.PlayerStatistics)
