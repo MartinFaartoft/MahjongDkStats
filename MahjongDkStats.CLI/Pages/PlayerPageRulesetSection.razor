@@ -47,7 +47,7 @@
 					<td>@game.NumberOfWinds</td>
 					@foreach(var player in game.Players)
 					{
-						<td class="single-line">
+						<td class="single-line @(PlayerName == player.Name ? "highlight" : "")">
 							<a href='@Helpers.CreatePlayerUrl(player.Name)'>@Helpers.ShortenName(player.Name)</a><br /> @player.Score
 						</td>
 					}
