@@ -8,7 +8,7 @@ public static class Helpers
 		=> $"{NameSanitizer.SanitizeForUrlUsage(name)}.html";
 
 	public static string RemoveDecimalMarker(decimal value) 
-		=> value.ToString().Replace(",", "");
+		=> Math.Round(value*100).ToString();
 
 	public static string CreateMcrPlotUrl(PlayerStatistics p) 
 		=> $"{NameSanitizer.SanitizeForUrlUsage(p.Name)}-mcr-rating.png";
