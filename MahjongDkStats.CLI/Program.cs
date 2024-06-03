@@ -105,11 +105,17 @@ public class Program
                 );
 
 			tasks.Add(Task.Run(()
-                => PlotHelper.CreateRatingPlot(player.McrStatistics.Rating, $"MCR Rating - {player.Name}")
+                => PlotHelper.CreateDateTimePlot(player.McrStatistics.Rating, $"MCR rating - {player.Name}")
                 .SavePng($"dist/img/{NameSanitizer.SanitizeForUrlUsage(player.Name)}-mcr-rating.png", 600, 338)));
 			tasks.Add(Task.Run(()
-                => PlotHelper.CreateRatingPlot(player.RiichiStatistics.Rating, $"Riichi Rating - {player.Name}")
+				=> PlotHelper.CreatingInvertedYDateTimePlot(player.McrStatistics.RatingListPosition, $"MCR ratinglist position - {player.Name}")
+				.SavePng($"dist/img/{NameSanitizer.SanitizeForUrlUsage(player.Name)}-mcr-position.png", 600, 338)));
+			tasks.Add(Task.Run(()
+                => PlotHelper.CreateDateTimePlot(player.RiichiStatistics.Rating, $"Riichi rating - {player.Name}")
                 .SavePng($"dist/img/{NameSanitizer.SanitizeForUrlUsage(player.Name)}-riichi-rating.png", 600, 338)));
+			tasks.Add(Task.Run(()
+				=> PlotHelper.CreatingInvertedYDateTimePlot(player.RiichiStatistics.RatingListPosition, $"Riichi ratinglist position - {player.Name}")
+				.SavePng($"dist/img/{NameSanitizer.SanitizeForUrlUsage(player.Name)}-riichi-position.png", 600, 338)));
 		}
 
         Task.WaitAll(tasks.ToArray());

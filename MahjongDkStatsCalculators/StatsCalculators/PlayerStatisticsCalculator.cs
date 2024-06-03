@@ -91,6 +91,7 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 		var ratingListPositionHistory = ruleset == Ruleset.Mcr
 			? _mcrRatingListPositionCalculator.GetRatingListPositionHistory(stats.Name)
 			: _riichiRatingListPositionCalculator.GetRatingListPositionHistory(stats.Name);
+		var ratingListPosition = GetPlayerRatingListPositionChart(ratingListPositionHistory);
 		var headToHeadStatistics = rulesetStats.HeadToHeadStats.Values
 			.Select(h => new PlayerRulesetHeadToHeadStatistics(h.OpponentName, h.ScoreSumAgainst, Math.Round(h.ScoreSumAgainst / (decimal)h.WindsPlayedAgainst, 2), h.WindsPlayedAgainst, h.GamesPlayedAgainst))
 			.Where(h => h.WindsPlayedAgainst >= 25)
@@ -102,6 +103,7 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 		return new PlayerRulesetStatistics(
 					ruleset,
 					rating,
+					ratingListPosition,
 					rulesetStats.GameCount,
 					rulesetStats.MaxRating,
 					currentRating,
@@ -125,6 +127,13 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 		return new DateTimeChart(
 			dates.Select(d => d.ToDateTime(TimeOnly.MinValue)).ToArray(),
 			values.Select(r => (double)r).ToArray());
+	}
+
+	private DateTimeChart GetPlayerRatingListPositionChart(List<PlayerRatingListPositionEntry> ratingListPositionHistory)
+	{
+		return new DateTimeChart(
+			ratingListPositionHistory.Select(e => e.StartDate.ToDateTime(TimeOnly.MinValue)).ToArray(),
+			ratingListPositionHistory.Select(e => (double)e.RatingListPosition).ToArray());
 	}
 
 	private void EnsureRatingHistoryStartsWithZero(Dictionary<DateOnly, decimal> rating)

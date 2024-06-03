@@ -31,7 +31,9 @@
 			<td>@RulesetStatistics.ScorePerWind</td>
 		</tr>
 	</table>
-	<img src="img/@Helpers.CreatePlotUrl(@PlayerName, @RulesetStatistics.Ruleset)" />
+	<img src="img/@Helpers.CreateRatingPlotUrl(@PlayerName, @RulesetStatistics.Ruleset)" />
+
+	<img src="img/@Helpers.CreateRatingPositionPlotUrl(@PlayerName, @RulesetStatistics.Ruleset)" />
 
 	<h3>Latest games</h3>
 	<table>

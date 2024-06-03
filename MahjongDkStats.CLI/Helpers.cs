@@ -13,13 +13,24 @@ public static class Helpers
 	public static string CreateMcrPlotUrl(PlayerStatistics p) 
 		=> $"{NameSanitizer.SanitizeForUrlUsage(p.Name)}-mcr-rating.png";
 
-	public static string CreatePlotUrl(string name, Ruleset ruleset)
+	public static string CreateRatingPlotUrl(string name, Ruleset ruleset)
 	{
 		var safeName = NameSanitizer.SanitizeForUrlUsage(name);
 		return ruleset switch
 		{
 			Ruleset.Mcr => $"{safeName}-mcr-rating.png",
 			Ruleset.Riichi => $"{safeName}-riichi-rating.png",
+			_ => throw new NotImplementedException(),
+		};
+	}
+
+	public static string CreateRatingPositionPlotUrl(string name, Ruleset ruleset)
+	{
+		var safeName = NameSanitizer.SanitizeForUrlUsage(name);
+		return ruleset switch
+		{
+			Ruleset.Mcr => $"{safeName}-mcr-position.png",
+			Ruleset.Riichi => $"{safeName}-riichi-position.png",
 			_ => throw new NotImplementedException(),
 		};
 	}
