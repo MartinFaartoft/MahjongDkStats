@@ -11,12 +11,16 @@
 			<td>@RulesetStatistics.GameCount</td>
 		</tr>
 		<tr>
-			<td>Highest rating ever</td>
+			<td>Highest rating achieved</td>
 			<td>@RulesetStatistics.MaxRating</td>
 		</tr>
 		<tr>
-			<td>Highest rating list position ever</td>
+			<td>Highest rating list position achieved</td>
 			<td>#@highestRatingListPositionEntry.RatingListPosition on @highestRatingListPositionEntry.StartDate</td>
+		</tr>
+		<tr>
+			<td>Record score</td>
+			<td>@(RulesetStatistics.RecordGameScore.RecordValue) on @(RulesetStatistics.RecordGameScore.Game.DateOfGame)</td>
 		</tr>
 		<tr>
 			<td>Score sum</td>

@@ -62,6 +62,9 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 		stats.ScoreSum += player.Score;
 		stats.CurrentWinningStreak = player.Score > 0 ? stats.CurrentWinningStreak + 1 : 0;
 		stats.LongestWinningStreak = Math.Max(stats.CurrentWinningStreak, stats.LongestWinningStreak);
+		stats.RecordGameScore = player.Score > stats.RecordGameScore.RecordValue
+			? new RecordGame<int>(game, player.Name, player.Score)
+			: stats.RecordGameScore;
 		stats.GameHistory.Add(game);	
 	}
 
@@ -110,6 +113,7 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 					latestGame?.DateOfGame ?? DateOnly.MinValue,
 					rulesetStats.ScoreSum,
 					rulesetStats.LongestWinningStreak,
+					rulesetStats.RecordGameScore,
 					scorePerWind,
 					headToHeadStatistics,
 					rulesetStats.GameHistory,
@@ -173,6 +177,8 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 		public int CurrentWinningStreak { get; set; }
 
 		public int LongestWinningStreak { get; set; }
+
+		public RecordGame<int> RecordGameScore { get; set; } = RecordGame<int>.None(int.MinValue);
 
 		public Dictionary<DateOnly, decimal> Rating { get; set; } = [];
 
