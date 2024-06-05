@@ -1,6 +1,4 @@
-﻿using static MahjongDkStatsCalculators.StatsCalculators.WinningStreakCalculator;
-
-namespace MahjongDkStatsCalculators.StatsCalculators;
+﻿namespace MahjongDkStatsCalculators.Calculators;
 
 internal abstract class PlayerRulesetStatisticCalculatorBase<T> where T : new()
 {

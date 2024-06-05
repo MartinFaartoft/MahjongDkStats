@@ -1,6 +1,4 @@
-﻿using MahjongDkStatsCalculators.StatsCalculators;
-
-namespace MahjongDkStatsCalculators;
+﻿namespace MahjongDkStatsCalculators;
 
 public record PlayerRulesetStatistics(
 	Ruleset Ruleset,

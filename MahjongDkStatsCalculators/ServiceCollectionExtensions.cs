@@ -1,4 +1,4 @@
-﻿using MahjongDkStatsCalculators.StatsCalculators;
+﻿using MahjongDkStatsCalculators.Calculators;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace MahjongDkStatsCalculators;

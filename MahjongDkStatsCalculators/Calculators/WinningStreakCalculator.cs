@@ -1,9 +1,9 @@
-﻿namespace MahjongDkStatsCalculators.StatsCalculators;
+﻿namespace MahjongDkStatsCalculators.Calculators;
 
 internal class WinningStreakCalculator : PlayerRulesetStatisticCalculatorBase<WinningStreak>
 {
 	protected override void AddGame(Player player, Game game, WinningStreak ws)
-	{ 
+	{
 		if (player.Score > 0)
 		{
 			if (ws.CurrentStreakLength == 0)
@@ -29,12 +29,9 @@ internal class WinningStreakCalculator : PlayerRulesetStatisticCalculatorBase<Wi
 	internal RecordGame<int> GetLongestWinningStreak(string name, Ruleset ruleset)
 	{
 		var key = new PlayerRulesetKey(name, ruleset);
-		if (_dict.TryGetValue(key, out WinningStreak? streak))
-		{
-			return new RecordGame<int>(streak.FirstGameInLongestStreak, name, streak.LongestStreakLength);
-		}
-
-		return new RecordGame<int>(Game.None, name, 0);
+		return _dict.TryGetValue(key, out WinningStreak? streak)
+			? new RecordGame<int>(streak.FirstGameInLongestStreak, name, streak.LongestStreakLength)
+			: new RecordGame<int>(Game.None, name, 0);
 	}
 }
 

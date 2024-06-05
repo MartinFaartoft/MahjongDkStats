@@ -1,4 +1,4 @@
-﻿namespace MahjongDkStatsCalculators.StatsCalculators;
+﻿namespace MahjongDkStatsCalculators.Calculators;
 
 internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 {

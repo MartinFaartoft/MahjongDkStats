@@ -1,6 +1,6 @@
-﻿namespace MahjongDkStatsCalculators.StatsCalculators;
+﻿namespace MahjongDkStatsCalculators.Calculators;
 
-internal partial class PlayerRatingListPositionCalculator
+internal class PlayerRatingListPositionCalculator
 {
 	private readonly Dictionary<string, List<PlayerRatingListPositionEntry>> _ratingListPositionHistory = [];
 
@@ -19,12 +19,13 @@ internal partial class PlayerRatingListPositionCalculator
 		int pos = 1;
 		foreach (var pr in currentRatingList)
 		{
-			if (!_ratingListPositionHistory.ContainsKey(pr.Name))
+			if (!_ratingListPositionHistory.TryGetValue(pr.Name, out List<PlayerRatingListPositionEntry>? value))
 			{
-				_ratingListPositionHistory[pr.Name] = new List<PlayerRatingListPositionEntry>();
+				value = new List<PlayerRatingListPositionEntry>();
+				_ratingListPositionHistory[pr.Name] = value;
 			}
 
-			var rlph = _ratingListPositionHistory[pr.Name];
+			var rlph = value;
 
 			if (rlph.Count == 0 || rlph.Last().RatingListPosition != pos)
 			{
