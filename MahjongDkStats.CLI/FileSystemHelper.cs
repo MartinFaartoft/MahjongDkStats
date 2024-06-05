@@ -9,7 +9,10 @@
 				Directory.Delete("dist", true);
 			}
 			Directory.CreateDirectory("dist");
-			Copy("assets", "dist");
+			if (Directory.Exists("assets"))
+			{
+				Copy("assets", "dist");
+			}
 			Directory.CreateDirectory("dist/img");
 		}
 

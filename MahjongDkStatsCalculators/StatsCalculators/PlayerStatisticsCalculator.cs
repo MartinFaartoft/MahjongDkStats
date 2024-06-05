@@ -3,8 +3,9 @@
 internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 {
 	private readonly Dictionary<string, PlayerStats> Players = [];
-	private PlayerRatingListPositionCalculator _mcrRatingListPositionCalculator = new();
-	private PlayerRatingListPositionCalculator _riichiRatingListPositionCalculator = new();
+	private readonly PlayerRatingListPositionCalculator _mcrRatingListPositionCalculator = new();
+	private readonly PlayerRatingListPositionCalculator _riichiRatingListPositionCalculator = new();
+	private readonly WinningStreakCalculator _winningStreakCalculator = new();
 
 	public override void AppendGame(Game game, Ruleset ruleset)
 	{
@@ -49,19 +50,18 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 		stats.GameCount++;
 		stats.LatestGame = stats.LatestGame > game.DateOfGame ? stats.LatestGame : game.DateOfGame;
 
-		UpdatePlayerRulesetStats(player, rulesetStats, game);
+		UpdatePlayerRulesetStats(player, rulesetStats, ruleset, game);
 		UpdatePlayerRulesetHeadToHeadStats(player, rulesetStats, game);
 	}
 
-	private void UpdatePlayerRulesetStats(Player player, PlayerRulesetStats stats, Game game)
+	private void UpdatePlayerRulesetStats(Player player, PlayerRulesetStats stats, Ruleset ruleset, Game game)
 	{
 		stats.Rating[game.DateOfGame] = player.NewRating; // This overwrites previous games played on same day, potentially hiding peaks and troughs in the graph
 		stats.MaxRating = stats.MaxRating > player.NewRating ? stats.MaxRating : player.NewRating;
 		stats.GameCount++;
 		stats.WindCount += game.NumberOfWinds;
 		stats.ScoreSum += player.Score;
-		stats.CurrentWinningStreak = player.Score > 0 ? stats.CurrentWinningStreak + 1 : 0;
-		stats.LongestWinningStreak = Math.Max(stats.CurrentWinningStreak, stats.LongestWinningStreak);
+		_winningStreakCalculator.AddGame(player, ruleset, game);
 		stats.RecordGameScore = player.Score > stats.RecordGameScore.RecordValue
 			? new RecordGame<int>(game, player.Name, player.Score)
 			: stats.RecordGameScore;
@@ -112,7 +112,7 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 					currentRating,
 					latestGame?.DateOfGame ?? DateOnly.MinValue,
 					rulesetStats.ScoreSum,
-					rulesetStats.LongestWinningStreak,
+					_winningStreakCalculator.GetLongestWinningStreak(stats.Name, ruleset),
 					rulesetStats.RecordGameScore,
 					scorePerWind,
 					headToHeadStatistics,
@@ -151,7 +151,7 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 		rating[minDate.AddDays(-1)] = 0M;
 	}
 
-	private class PlayerStats(string name)
+	internal class PlayerStats(string name)
 	{
 		public string Name { get; set; } = name;
 
@@ -164,7 +164,7 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 		public PlayerRulesetStats RiichiStats { get; set; } = new PlayerRulesetStats();
     }
 
-	private class PlayerRulesetStats()
+	internal class PlayerRulesetStats()
 	{
 		public int GameCount { get; set; }
 
@@ -187,7 +187,7 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
         public List<Game> GameHistory { get; } = [];
 	}
 
-	private class PlayerRulesetHeadToHeadStats()
+	internal class PlayerRulesetHeadToHeadStats()
 	{
 		public string OpponentName { get; set; } = string.Empty;
 
