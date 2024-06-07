@@ -36,17 +36,19 @@ h2 {
 }
 
 .statistics {
-    padding: 4rem 2rem;
-
-  /* Grid styles */
-    display: grid;
-    align-items: center;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 25px;
 }
 
 .statistics > div {
-    margin: 25px auto;
+    margin: 25px;
     text-align: center;
+    width: 10%;
+    min-width: 125px;
+    flex-grow: 0;
 }
 
 .stat-value {
