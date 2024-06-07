@@ -1,0 +1,103 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: "Raleway", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: normal;
+    font-style: normal;
+}
+
+.heading {
+    font-family: "Lora", serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: italic;
+}
+
+.banner {
+    display: block;
+    background-color: #27405E;
+    text-align: center;
+    color: white;
+    padding: 50px 0px;
+}
+
+h2 {
+    margin: 50px;
+    border-bottom: 2px solid #B98788;
+    font-size: 28px;
+}
+
+.logo {
+    margin: 25px 50px;
+}
+
+.statistics {
+    padding: 4rem 2rem;
+
+  /* Grid styles */
+    display: grid;
+    align-items: center;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.statistics > div {
+    margin: 25px auto;
+    text-align: center;
+}
+
+.stat-value {
+    font-weight: 500;
+    font-size: 2rem;
+    color: #555;
+}
+
+.stat-name {
+    font-size: 1.2rem;
+    color: grey;
+}
+
+.rulesets-overview  {
+    padding-bottom: 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+}
+
+.ruleset-overview {
+    border-radius: 6px;
+    margin: 6px;
+    padding: 20px;  
+    width: 30%;
+    min-width: 250px;
+    flex-grow: 0;
+}
+
+.ruleset-overview h3 {
+    font-size: 24px;
+}
+
+.ruleset-overview table {
+    width: 100%;
+    margin: auto;
+}
+
+.mcr {
+    background-color: #F5F5F7;
+}
+
+.riichi {
+    background-color: #D3D8DE;
+}
+
+.center {
+    text-align: center;
+}
+
+.right {
+    text-align: right;
+}
