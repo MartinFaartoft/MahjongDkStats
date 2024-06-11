@@ -67,6 +67,11 @@ section {
     color: grey;
 }
 
+.stat-icon {
+    width: 100px;
+    height: 100px;
+}
+
 .rulesets-overview  {
     padding-bottom: 2rem;
     display: flex;
@@ -107,4 +112,8 @@ section {
 
 .right {
     text-align: right;
+}
+
+.label {
+    font-weight: 500;
 }
