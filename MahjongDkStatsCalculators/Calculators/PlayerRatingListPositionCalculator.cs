@@ -26,11 +26,7 @@ internal class PlayerRatingListPositionCalculator
 			}
 
 			var rlph = value;
-
-			if (rlph.Count == 0 || rlph.Last().RatingListPosition != pos)
-			{
-				rlph.Add(new PlayerRatingListPositionEntry(game.DateOfGame, pos));
-			}
+			rlph.Add(new PlayerRatingListPositionEntry(game.DateOfGame, pos)); // TODO: if nothing better to do, don't add points between start and end if position unchanged
 			pos++;
 		}
 	}

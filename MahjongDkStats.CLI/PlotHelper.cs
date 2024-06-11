@@ -26,12 +26,19 @@ namespace MahjongDkStats.CLI
 			return plot;
 		}
 
+		private static readonly double[] RatingPositionTicks = [1, 10, 20, 30, 40, 50];
+
 		internal static Plot CreatingInvertedYDateTimePlot(DateTimeChart data, string title)
 		{
 			var plot = CreateDateTimePlot(data, title);
-			//plot.Axes.SetLimitsY(1, 50); // TODO fiddle with this some more to find a good balance between detail and overview
+			if (data.X.Length == 0)
+			{
+				return plot;
+			}
+			//plot.Axes.Left.SetTicks(RatingPositionTicks, RatingPositionTicks.Select(v => v.ToString()).ToArray());
+			plot.Axes.SetLimitsY(0, data.Y.Max()); // TODO fiddle with this some more to find a good balance between detail and overview
 			plot.Axes.InvertY();
-			
+
 			return plot;
 		}
 
