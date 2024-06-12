@@ -73,6 +73,7 @@
 			<tr>
 				<th>Opponent</th>
 				<th aria-sort="descending">Score sum</th>
+				<th>Score diff</th>
 				<th>Score / wind</th>
 				<th>Games</th>
 				<th>Winds</th>
@@ -84,6 +85,7 @@
 				<tr>
 					<td><a href='@Helpers.CreatePlayerUrl(entry.OpponentName)'>@entry.OpponentName</a></td>
 					<td>@entry.ScoreSumAgainst</td>
+					<td>@entry.ScoreDeltaAgainst</td>
 					<td data-sort="@Helpers.RemoveDecimalMarker(entry.ScorePerWindAgainst)">@entry.ScorePerWindAgainst</td>
 					<td>@entry.GamesPlayedAgainst</td>
 					<td>@entry.WindsPlayedAgainst</td>

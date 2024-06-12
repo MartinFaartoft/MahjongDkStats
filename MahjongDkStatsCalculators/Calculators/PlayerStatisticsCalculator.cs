@@ -82,6 +82,8 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 			var s = h[opponent.Name];
 
 			s.ScoreSumAgainst += player.Score;
+			s.OpponentScoreSum += opponent.Score;
+			s.ScoreDeltaAgainst = s.ScoreSumAgainst - s.OpponentScoreSum;
 			s.WindsPlayedAgainst += game.NumberOfWinds;
 			s.GamesPlayedAgainst += 1;
 		}
@@ -96,7 +98,7 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 			: _riichiRatingListPositionCalculator.GetRatingListPositionHistory(stats.Name);
 		var ratingListPosition = GetPlayerRatingListPositionChart(ratingListPositionHistory);
 		var headToHeadStatistics = rulesetStats.HeadToHeadStats.Values
-			.Select(h => new PlayerRulesetHeadToHeadStatistics(h.OpponentName, h.ScoreSumAgainst, Math.Round(h.ScoreSumAgainst / (decimal)h.WindsPlayedAgainst, 2), h.WindsPlayedAgainst, h.GamesPlayedAgainst))
+			.Select(h => new PlayerRulesetHeadToHeadStatistics(h.OpponentName, h.ScoreSumAgainst, h.ScoreDeltaAgainst, Math.Round(h.ScoreSumAgainst / (decimal)h.WindsPlayedAgainst, 2), h.WindsPlayedAgainst, h.GamesPlayedAgainst))
 			.Where(h => h.WindsPlayedAgainst >= 25)
 			.OrderByDescending(h => h.ScoreSumAgainst)
 			.ToArray();
@@ -193,7 +195,11 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 
         public int ScoreSumAgainst { get; set; }
 
-        public int GamesPlayedAgainst { get; set; }
+		public int OpponentScoreSum { get; set; }
+		
+		public int ScoreDeltaAgainst { get; set; }
+
+		public int GamesPlayedAgainst { get; set; }
 
         public int WindsPlayedAgainst { get; set; }
     }
