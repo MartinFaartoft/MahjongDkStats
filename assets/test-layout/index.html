@@ -11,9 +11,13 @@
     <title>Mahjong Danmark - Statistics</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://raw.githubusercontent.com/necolas/normalize.css/master/normalize.css" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="normalize.css" type="text/css">
+    <link rel="stylesheet" href="sortable.min.css" type="text/css">
     <link rel="stylesheet" href="style.css" type="text/css">
+    <script src="sortable.min.js"></script>
 </head>
 
 <body>
@@ -56,8 +60,8 @@
             <p class="stat-value">241</p>
             <p class="stat-name">Days spent building walls</p>
         </div>
-                <div>
-                    <img class="stat-icon" src="icon-people-1.webp"></img>
+        <div>
+            <img class="stat-icon" src="icon-people-1.webp"></img>
             <p class="stat-value">234km</p>
             <p class="stat-name">Walls built</p>
         </div>
@@ -171,4 +175,64 @@
             </table>
         </section>
     </section>
+    <h2 class="heading">Active Players Statistics</h2>
+    <section class="active-players sortable">
+        <table class="sortable">
+            <thead>
+                <tr>
+                    <th class="no-sort"></th>
+                    <th class="left no-sort" colspan="4">MCR</th>
+                    <th class="left no-sort" colspan="4">Riichi</th>
+                </tr>
+                <tr>
+                    <th aria-sort="ascending">Name</th>
+                    <th>Rating</th>
+                    <th>Score/wind</th>
+                    <th>Games</th>
+                    <th>Winds</th>
+                    <th>Rating</th>
+                    <th>Score/wind</th>
+                    <th>Games</th>
+                    <th>Winds</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Jesper Nøhr</td>
+                    <td class="right">70,54</td>
+                    <td class="right">1.23</td>
+                    <td class="right">456</td>
+                    <td class="right">567</td>
+                    <td class="right">6012</td>
+                    <td class="right">1023</td>
+                    <td class="right">89</td>
+                    <td class="right">160</td>
+                </tr>
+                <tr>
+                    
+                    <td>Martin Faartoft</td>
+                    <td class="right">123</td>
+                    <td class="right">1.23</td>
+                    <td class="right">456</td>
+                    <td class="right">567</td>
+                    <td class="right">6012</td>
+                    <td class="right">1023</td>
+                    <td class="right">89</td>
+                    <td class="right">160</td>
+                </tr>
+                <tr>
+                    <td>Sheila Jakobsen</td>
+                    <td class="right">123</td>
+                    <td class="right">1.23</td>
+                    <td class="right">456</td>
+                    <td class="right">567</td>
+                    <td class="right">6012</td>
+                    <td class="right">1023</td>
+                    <td class="right">89</td>
+                    <td class="right">160</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+    <h2 class="heading">Footer</h2>
 </body>
