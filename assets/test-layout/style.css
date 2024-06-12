@@ -138,3 +138,19 @@ section {
 .active-players th {
     text-align: left;
 }
+
+.ruleset-header {
+    column-span: 4;
+}
+
+@media screen and (max-width: 1037px) {
+    .extra {
+        display:none;
+    }
+
+    .ruleset-header {
+        column-span: 2;
+    }
+
+
+}
