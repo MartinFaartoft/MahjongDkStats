@@ -98,9 +98,9 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 			: _riichiRatingListPositionCalculator.GetRatingListPositionHistory(stats.Name);
 		var ratingListPosition = GetPlayerRatingListPositionChart(ratingListPositionHistory);
 		var headToHeadStatistics = rulesetStats.HeadToHeadStats.Values
-			.Select(h => new PlayerRulesetHeadToHeadStatistics(h.OpponentName, h.ScoreSumAgainst, h.ScoreDeltaAgainst, Math.Round(h.ScoreSumAgainst / (decimal)h.WindsPlayedAgainst, 2), h.WindsPlayedAgainst, h.GamesPlayedAgainst))
+			.Select(h => new PlayerRulesetHeadToHeadStatistics(h.OpponentName, h.ScoreSumAgainst, Math.Round(h.ScoreSumAgainst / (decimal)h.WindsPlayedAgainst, 2), h.ScoreDeltaAgainst, Math.Round(h.ScoreDeltaAgainst / (decimal)h.WindsPlayedAgainst, 2), h.WindsPlayedAgainst, h.GamesPlayedAgainst))
 			.Where(h => h.WindsPlayedAgainst >= 25)
-			.OrderByDescending(h => h.ScoreSumAgainst)
+			.OrderByDescending(h => h.ScoreDeltaPerWindAgainst)
 			.ToArray();
 		var latestGame = rulesetStats.GameHistory.LastOrDefault();
 		var currentRating = latestGame?.Players.First(p => p.Name == stats.Name).NewRating ?? 0;
