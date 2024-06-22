@@ -152,11 +152,18 @@ footer {
     background-color: var(--banner-bg-color);
     display: flex;
     justify-content: center;
+    color: white;
+    font-size: .9rem;
 }
 
 footer div {
     max-width: 1000px;
-    padding: 50px;
+    padding: 40px;
+}
+
+footer a {
+    color: white;
+    text-decoration: none;
 }
 
 @media screen and (max-width: 1037px) {
