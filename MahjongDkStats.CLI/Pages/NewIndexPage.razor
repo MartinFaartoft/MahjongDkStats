@@ -1,0 +1,189 @@
+﻿@using MahjongDkStatsCalculators
+@using MahjongDkStats.CLI
+<!DOCTYPE html>
+<html lang="en">
+<Header />
+<body>
+    <a href="https://mahjong.dk"><img class="logo" src="img/mjdk-logo.jpg"></a>
+    <h1 class="banner heading">Game Statistics of Mahjong Danmark</h1>
+    <h2 class="heading">Overview</h2>
+    <section class="statistics">
+        <div>
+            <img class="stat-icon" src="img/games.png">
+            <p class="stat-value">18218</p>
+            <p class="stat-name">Games</p>
+        </div>
+        <div>
+            <img class="stat-icon" src="img/winds.jpg">
+            <p class="stat-value">42265</p>
+            <p class="stat-name">Winds</p>
+        </div>
+        <div>
+            <img class="stat-icon" src="img/hands.jpg">
+            <p class="stat-value">173614</p>
+            <p class="stat-name">Hands</p>
+        </div>
+        <div>
+            <img class="stat-icon" src="img/players.png">
+            <p class="stat-value">775</p>
+            <p class="stat-name">Players</p>
+        </div>
+        <div>
+            <img class="stat-icon" src="img/active-players.png">
+            <p class="stat-value">138</p>
+            <p class="stat-name">Active players</p>
+        </div>
+        <div>
+            <img class="stat-icon" src="img/clock.jpg">
+            <p class="stat-value">241</p>
+            <p class="stat-name">Days spent building walls</p>
+        </div>
+        <div>
+            <img class="stat-icon" src="img/wall.png">
+            <p class="stat-value">234km</p>
+            <p class="stat-name">Walls built</p>
+        </div>
+    </section>
+    <h2 class="heading">Best scores and ratings</h2>
+    <section class="rulesets-overview">
+        <section class="ruleset-overview mcr">
+            <h3 class="heading center">MCR</h3>
+            <table>
+                <tbody>
+                    <tr>
+                        <td class="label">Best score</td>
+                        <td class="right">12345 - Bob Hope</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Winds</td>
+                        <td class="right">12345</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Hands</td>
+                        <td class="right">1234567</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Players</td>
+                        <td class="right">1234</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Active Players</td>
+                        <td class="right">123</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+        <section class="ruleset-overview riichi">
+            <h3 class="heading center">Riichi</h3>
+            <table>
+                <tbody>
+                    <tr>
+                        <td class="label">Best score</td>
+                        <td class="right">12345 - John Doe</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Winds</td>
+                        <td class="right">12345</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Hands</td>
+                        <td class="right">1234567</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Players</td>
+                        <td class="right">1234</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Active Players</td>
+                        <td class="right">123</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </section>
+    <h2 class="heading">Active Players Statistics</h2>
+    <section class="active-players sortable">
+        <table class="sortable">
+            <thead>
+                <tr>
+                    <th class="no-sort"></th>
+                    <th class="left no-sort">MCR</th>
+                    <th class="no-sort"></th>
+                    <th class="no-sort extra"></th>
+                    <th class="no-sort extra"></th>
+                    <th class="left no-sort">Riichi</th>
+                    <th class="no-sort"></th>
+                    <th class="no-sort extra"></th>
+                    <th class="no-sort extra"></th>
+                </tr>
+                <tr>
+                    <th aria-sort="ascending">Name</th>
+                    <th>Rating</th>
+                    <th class="extra">Score/wind</th>
+                    <th>Games</th>
+                    <th class="extra">Winds</th>
+                    <th>Rating</th>
+                    <th class="extra">Score/wind</th>
+                    <th>Games</th>
+                    <th class="extra">Winds</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Jesper Nøhr</td>
+                    <td class="right">70,54</td>
+                    <td class="right extra">1.23</td>
+                    <td class="right">456</td>
+                    <td class="right extra">567</td>
+                    <td class="right">6012</td>
+                    <td class="right extra">1023</td>
+                    <td class="right">89</td>
+                    <td class="right extra">160</td>
+                </tr>
+                <tr>
+                    
+                    <td>Martin Faartoft</td>
+                    <td class="right">123</td>
+                    <td class="right extra">1.23</td>
+                    <td class="right">456</td>
+                    <td class="right extra">567</td>
+                    <td class="right">6012</td>
+                    <td class="right extra">1023</td>
+                    <td class="right">89</td>
+                    <td class="right extra">160</td>
+                </tr>
+                <tr>
+                    <td>Sheila Jakobsen</td>
+                    <td class="right">123</td>
+                    <td class="right extra">1.23</td>
+                    <td class="right">456</td>
+                    <td class="right extra">567</td>
+                    <td class="right">6012</td>
+                    <td class="right extra">1023</td>
+                    <td class="right">89</td>
+                    <td class="right extra">160</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+    <footer>
+            <div>
+                <a href="#top">To top</a>
+            </div>
+            <div>
+                <a href="about.html">About</a>
+            </div>
+            <div>
+                ©2024 Mahjong Danmark 
+            </div>
+    </footer>
+</body>
+</html>
+
+@code {
+    [Parameter]
+    public StatisticsResult Stats { get; set; } = null!;
+
+    [Parameter]
+    public DateOnly NewestGameDate { get; set; }
+}

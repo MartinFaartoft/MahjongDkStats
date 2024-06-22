@@ -87,7 +87,7 @@ public class Program
 	private static async Task RenderHtmlSite(StatisticsResult result, DateOnly newestGameDate, HtmlRenderer htmlRenderer)
     {
 		Dictionary<string, object?> parameters = new Dictionary<string, object?> { { "Stats", result }, { "NewestGameDate", newestGameDate } };
-        var html = await RenderPageToHtml<IndexPage>(parameters, htmlRenderer);
+        var html = await RenderPageToHtml<NewIndexPage>(parameters, htmlRenderer);
         await File.WriteAllTextAsync("dist/index.html", html);
 
         var aboutHtml = await RenderPageToHtml<AboutPage>([], htmlRenderer);
