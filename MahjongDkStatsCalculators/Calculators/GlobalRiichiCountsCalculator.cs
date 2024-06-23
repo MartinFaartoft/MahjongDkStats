@@ -19,5 +19,5 @@ internal class GlobalRiichiCountsCalculator : GlobalCountsCalculator
 			];
 	}
 
-	public override IEnumerable<Statistic> GetGlobalStatistics() => [];
+	public override GlobalStatistics GetGlobalStatistics() => null!;
 }

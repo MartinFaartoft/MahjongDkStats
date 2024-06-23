@@ -51,7 +51,7 @@ public class Program
             }
         }
 
-        var globalStatistics = statsCalculators.SelectMany(calc => calc.GetGlobalStatistics()).ToArray();
+        var globalStatistics = statsCalculators.Select(calc => calc.GetGlobalStatistics()).Where(gs => gs is not null).First();
         var mcrStatistics = statsCalculators.SelectMany(calc => calc.GetGlobalMcrStatistics()).ToArray();
         var riichiStatistics = statsCalculators.SelectMany(calc => calc.GetGlobalRiichiStatistics()).ToArray();
         var playerStatistics = statsCalculators.SelectMany(calc => calc.GetPlayerStatistics()).ToList().OrderBy(ps => ps.Name).ToArray();

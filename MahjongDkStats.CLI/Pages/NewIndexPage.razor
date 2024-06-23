@@ -7,40 +7,41 @@
     <a href="https://mahjong.dk"><img class="logo" src="img/mjdk-logo.jpg"></a>
     <h1 class="banner heading">Game Statistics of Mahjong Danmark</h1>
     <h2 class="heading">Overview</h2>
+    <p class="right">@NewestGameDate</p>
     <section class="statistics">
         <div>
             <img class="stat-icon" src="img/games.png">
-            <p class="stat-value">18218</p>
+            <p class="stat-value">@Stats.GlobalStatistics.TotalGameCount</p>
             <p class="stat-name">Games</p>
         </div>
         <div>
             <img class="stat-icon" src="img/winds.jpg">
-            <p class="stat-value">42265</p>
+            <p class="stat-value">@Stats.GlobalStatistics.TotalWindsCount</p>
             <p class="stat-name">Winds</p>
         </div>
         <div>
             <img class="stat-icon" src="img/hands.jpg">
-            <p class="stat-value">173614</p>
+            <p class="stat-value">@Stats.GlobalStatistics.TotalHandsCount</p>
             <p class="stat-name">Hands</p>
         </div>
         <div>
             <img class="stat-icon" src="img/players.png">
-            <p class="stat-value">775</p>
+            <p class="stat-value">XXX</p>
             <p class="stat-name">Players</p>
         </div>
         <div>
             <img class="stat-icon" src="img/active-players.png">
-            <p class="stat-value">138</p>
+            <p class="stat-value">YYY</p>
             <p class="stat-name">Active players</p>
         </div>
         <div>
             <img class="stat-icon" src="img/clock.jpg">
-            <p class="stat-value">241</p>
+            <p class="stat-value">@(Math.Round(Stats.GlobalStatistics.TimeSpentShufflingAndBuilding.TotalDays, 2))</p>
             <p class="stat-name">Days spent building walls</p>
         </div>
         <div>
             <img class="stat-icon" src="img/wall.png">
-            <p class="stat-value">234km</p>
+            <p class="stat-value">@(Math.Round(Stats.GlobalStatistics.TotalWallLengthMeters / 1000m, 2))km</p>
             <p class="stat-name">Walls built</p>
         </div>
     </section>

@@ -4,7 +4,7 @@ public interface IStatsCalculator
 {
     void AppendGame(Game game, Ruleset ruleset);
 
-    IEnumerable<Statistic> GetGlobalStatistics();
+    GlobalStatistics GetGlobalStatistics();
 
     IEnumerable<Statistic> GetGlobalMcrStatistics();
     IEnumerable<Statistic> GetGlobalRiichiStatistics();

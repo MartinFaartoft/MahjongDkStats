@@ -1,7 +1,7 @@
 ﻿namespace MahjongDkStatsCalculators;
 
 public record StatisticsResult(
-    Statistic[] GlobalStatistics,
+    GlobalStatistics GlobalStatistics,
     Statistic[] McrStatistics,
     Statistic[] RiichiStatistics,
     PlayerStatistics[] PlayerStatistics,

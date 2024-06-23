@@ -14,15 +14,16 @@ internal class GlobalCountsCalculator : StatisticsCalculatorBase
 	}
 
 	private const decimal TileWidthInM = .02M;
+	private const int MinutesPerBuildAndShuffle = 2;
 
-	public override IEnumerable<Statistic> GetGlobalStatistics()
+	public override GlobalStatistics GetGlobalStatistics()
 	{
-		return [
-			new Statistic("Games played", _gameCount.ToString()),
-			new Statistic("Winds played", _windsCount.ToString()),
-			new Statistic("Hands played", _handsCount.ToString()),
-			new Statistic("Time spent shuffling and building walls", Math.Round(TimeSpan.FromMinutes(_handsCount * 2).TotalDays).ToString() + " days"),
-			new Statistic("Total length of walls built", Math.Round(_handsCount * 4 * 17 * TileWidthInM / 1000M).ToString() + " km")
-			];
+		return new GlobalStatistics(
+			_gameCount,
+			_windsCount,
+			_handsCount,
+			TimeSpan.FromMinutes(_handsCount * MinutesPerBuildAndShuffle),
+			_handsCount * 4 * 17 * TileWidthInM
+			);
 	}
 }
