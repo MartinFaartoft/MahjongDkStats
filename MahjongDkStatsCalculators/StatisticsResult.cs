@@ -2,8 +2,8 @@
 
 public record StatisticsResult(
     GlobalStatistics GlobalStatistics,
-    Statistic[] McrStatistics,
-    Statistic[] RiichiStatistics,
+    RuleSetRecords McrRecords,
+    RuleSetRecords RiichiRecords,
     PlayerStatistics[] PlayerStatistics,
     RatingEntry[] McrRatingList,
 	RatingEntry[] RiichiRatingList

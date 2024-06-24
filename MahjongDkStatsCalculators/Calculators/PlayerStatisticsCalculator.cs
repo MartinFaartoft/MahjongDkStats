@@ -1,13 +1,13 @@
 ﻿namespace MahjongDkStatsCalculators.Calculators;
 
-internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
+internal class PlayerStatisticsCalculator
 {
 	private readonly Dictionary<string, PlayerStats> Players = [];
 	private readonly PlayerRatingListPositionCalculator _mcrRatingListPositionCalculator = new();
 	private readonly PlayerRatingListPositionCalculator _riichiRatingListPositionCalculator = new();
 	private readonly WinningStreakCalculator _winningStreakCalculator = new();
 
-	public override void AppendGame(Game game, Ruleset ruleset)
+	public void AppendGame(Game game, Ruleset ruleset)
 	{
 		foreach(var player in game.Players)
 		{
@@ -24,17 +24,14 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 		}
 	}
 
-	public override IEnumerable<PlayerStatistics> GetPlayerStatistics()
+	public IEnumerable<PlayerStatistics> GetPlayerStatistics()
 	{
-		return Players
-			.Select(kv => new PlayerStatistics(
-				kv.Key,
-				[
-					new Statistic("Games played", kv.Value.GameCount.ToString()),
-					new Statistic("Most recent game", kv.Value.LatestGame.ToString("yyyy-MM-dd")),
-				],
-				GetPlayerRulesetStatistics(kv.Value, Ruleset.Mcr),
-				GetPlayerRulesetStatistics(kv.Value, Ruleset.Riichi)));
+		return Players.Select(kv => new PlayerStatistics(
+			kv.Key,
+			kv.Value.GameCount,
+			kv.Value.LatestGame,
+			GetPlayerRulesetStatistics(kv.Value, Ruleset.Mcr),
+			GetPlayerRulesetStatistics(kv.Value, Ruleset.Riichi)));
 	}
 
 	private void UpdatePlayer(Player player, Game game, Ruleset ruleset)
@@ -48,7 +45,7 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 		var rulesetStats = ruleset == Ruleset.Mcr ? stats.McrStats : stats.RiichiStats;
 
 		stats.GameCount++;
-		stats.LatestGame = stats.LatestGame > game.DateOfGame ? stats.LatestGame : game.DateOfGame;
+		stats.LatestGame = stats.LatestGame.DateOfGame > game.DateOfGame ? stats.LatestGame : game;
 
 		UpdatePlayerRulesetStats(player, rulesetStats, ruleset, game);
 		UpdatePlayerRulesetHeadToHeadStats(player, rulesetStats, game);
@@ -159,7 +156,7 @@ internal class PlayerStatisticsCalculator : StatisticsCalculatorBase
 
         public int GameCount { get; set; }
 
-		public DateOnly LatestGame { get; set; } = DateOnly.MinValue;
+		public Game LatestGame { get; set; } = Game.None;
 
         public PlayerRulesetStats McrStats { get; set; } = new PlayerRulesetStats();
 

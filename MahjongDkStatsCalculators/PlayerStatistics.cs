@@ -2,7 +2,8 @@
 
 public record PlayerStatistics(
 	string Name,
-	IEnumerable<Statistic> Statistics, 
+	int GamesPlayed,
+	Game MostRecentGame,
 	PlayerRulesetStatistics McrStatistics, 
 	PlayerRulesetStatistics RiichiStatistics
 	);

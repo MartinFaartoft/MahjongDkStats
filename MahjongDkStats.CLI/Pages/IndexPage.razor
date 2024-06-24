@@ -7,16 +7,6 @@
 	<h1>Mahjong Danmark - Statistics</h1>
 	<p class="right">@NewestGameDate</p>
 	<h2 id="mcr">MCR</h2>
-	<h3>Records</h3>
-	<table>
-		@foreach (var stat in Stats.McrStatistics)
-		{
-			<tr>
-				<td>@stat.Title</td>
-				<td>@stat.Value</td>
-			</tr>
-		}
-	</table>
 
 	<h3>Rating List<sup><dfn class="helptext" title="Players are included if they have a game played within the last 12 months.">&nbsp;?</dfn></sup></h3>
 	<table class="sortable">
@@ -42,16 +32,7 @@
 	</table>
 
 	<h2 id="riichi">Riichi</h2>
-	<h3>Records</h3>
-	<table>
-		@foreach (var stat in Stats.RiichiStatistics)
-		{
-			<tr>
-				<td>@stat.Title</td>
-				<td>@stat.Value</td>
-			</tr>
-		}
-	</table>
+
 
 	<h3>Rating List<sup><dfn class="helptext" title="Players are included if they have a game played within the last 12 months.">&nbsp;?</dfn></sup></h3>
 	<table class="sortable">

@@ -8,11 +8,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddStatsCalculators(this IServiceCollection services) 
     {
         services
-            .AddTransient<IStatsCalculator, GlobalCountsCalculator>()
-			.AddTransient<IStatsCalculator, GlobalMcrCountsCalculator>()
-			.AddTransient<IStatsCalculator, GlobalRiichiCountsCalculator>()
-			.AddTransient<IStatsCalculator, HighestScoreCalculator>()
-            .AddTransient<IStatsCalculator, PlayerStatisticsCalculator>();
+            .AddTransient<IStatsCalculator, StatisticsCalculator>();
 
         return services;
     }

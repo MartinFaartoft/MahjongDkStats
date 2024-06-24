@@ -26,7 +26,7 @@ public class Program
         ILoggerFactory loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
         await using var htmlRenderer = new HtmlRenderer(serviceProvider, loggerFactory);
 
-        var statsCalculators = serviceProvider.GetRequiredService<IEnumerable<IStatsCalculator>>();
+        var statsCalculator = serviceProvider.GetRequiredService<IStatsCalculator>();
         var stopwatch = new Stopwatch();
         stopwatch.Start();
         var gamesLoader = new GamesLoader();
@@ -37,24 +37,18 @@ public class Program
 
         foreach (var game in mcrGames)
         {
-            foreach (var calc in statsCalculators)
-            {
-                calc.AppendGame(game, Ruleset.Mcr);
-            }
+            statsCalculator.AppendGame(game, Ruleset.Mcr);
         }
 
         foreach (var game in riichiGames)
         {
-            foreach (var calc in statsCalculators)
-            {
-                calc.AppendGame(game, Ruleset.Riichi);
-            }
+            statsCalculator.AppendGame(game, Ruleset.Riichi);
         }
 
-        var globalStatistics = statsCalculators.Select(calc => calc.GetGlobalStatistics()).Where(gs => gs is not null).First();
-        var mcrStatistics = statsCalculators.SelectMany(calc => calc.GetGlobalMcrStatistics()).ToArray();
-        var riichiStatistics = statsCalculators.SelectMany(calc => calc.GetGlobalRiichiStatistics()).ToArray();
-        var playerStatistics = statsCalculators.SelectMany(calc => calc.GetPlayerStatistics()).ToList().OrderBy(ps => ps.Name).ToArray();
+        var globalStatistics = statsCalculator.GetGlobalStatistics();
+        var mcrRecords = statsCalculator.GetMcrRecords();
+        var riichiRecords = statsCalculator.GetRiichiRecords();
+        var playerStatistics = statsCalculator.GetPlayerStatistics().OrderBy(ps => ps.Name).ToArray();
         RatingEntry[] mcrRatingList = CreateMcrRatingList(playerStatistics);
 		RatingEntry[] riichiRatingList = CreateRiichiRatingList(playerStatistics);
         var newestGameDate = mcrGames.Concat(riichiGames).MaxBy(g => g.DateOfGame)!.DateOfGame;
@@ -62,7 +56,7 @@ public class Program
 		stopwatch.Restart();
 
 
-		await RenderHtmlSite(new StatisticsResult(globalStatistics, mcrStatistics, riichiStatistics, playerStatistics, mcrRatingList, riichiRatingList), newestGameDate, htmlRenderer);
+		await RenderHtmlSite(new StatisticsResult(globalStatistics, mcrRecords, riichiRecords, playerStatistics, mcrRatingList, riichiRatingList), newestGameDate, htmlRenderer);
 		Console.WriteLine($"Built static site in {stopwatch.ElapsedMilliseconds}ms");
     }
 

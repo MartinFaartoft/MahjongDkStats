@@ -52,24 +52,20 @@
             <table>
                 <tbody>
                     <tr>
-                        <td class="label">Best score</td>
-                        <td class="right">12345 - Bob Hope</td>
+                        <td class="label">Best game: @(Stats.McrRecords.RecordScore.PlayerName)</td>
+                        <td class="right">@(Stats.McrRecords.RecordScore.RecordValue)</td>
                     </tr>
                     <tr>
-                        <td class="label">Winds</td>
-                        <td class="right">12345</td>
+                        <td class="label">Best recent game: @(Stats.McrRecords.RecordRecentScore.PlayerName)</td>
+                        <td class="right">@(Stats.McrRecords.RecordRecentScore.RecordValue)</td>
                     </tr>
                     <tr>
-                        <td class="label">Hands</td>
-                        <td class="right">1234567</td>
+                        <td class="label">Best rating: @(Stats.McrRecords.RecordRating.PlayerName)</td>
+                        <td class="right">@(Stats.McrRecords.RecordRating.RecordValue)</td>
                     </tr>
                     <tr>
-                        <td class="label">Players</td>
-                        <td class="right">1234</td>
-                    </tr>
-                    <tr>
-                        <td class="label">Active Players</td>
-                        <td class="right">123</td>
+                        <td class="label">Best recent rating: @(Stats.McrRecords.RecordRecentRating.PlayerName)</td>
+                        <td class="right">@(Stats.McrRecords.RecordRecentRating.RecordValue)</td>
                     </tr>
                 </tbody>
             </table>
@@ -79,24 +75,20 @@
             <table>
                 <tbody>
                     <tr>
-                        <td class="label">Best score</td>
-                        <td class="right">12345 - John Doe</td>
+                        <td class="label">Best game: @(Stats.RiichiRecords.RecordScore.PlayerName)</td>
+                        <td class="right">@(Stats.RiichiRecords.RecordScore.RecordValue)</td>
                     </tr>
                     <tr>
-                        <td class="label">Winds</td>
-                        <td class="right">12345</td>
+                        <td class="label">Best recent game: @(Stats.RiichiRecords.RecordRecentScore.PlayerName)</td>
+                        <td class="right">@(Stats.RiichiRecords.RecordRecentScore.RecordValue)</td>
                     </tr>
                     <tr>
-                        <td class="label">Hands</td>
-                        <td class="right">1234567</td>
+                        <td class="label">Best rating: @(Stats.RiichiRecords.RecordRating.PlayerName)</td>
+                        <td class="right">@(Stats.RiichiRecords.RecordRating.RecordValue)</td>
                     </tr>
                     <tr>
-                        <td class="label">Players</td>
-                        <td class="right">1234</td>
-                    </tr>
-                    <tr>
-                        <td class="label">Active Players</td>
-                        <td class="right">123</td>
+                        <td class="label">Best recent rating: @(Stats.RiichiRecords.RecordRecentRating.PlayerName)</td>
+                        <td class="right">@(Stats.RiichiRecords.RecordRecentRating.RecordValue)</td>
                     </tr>
                 </tbody>
             </table>

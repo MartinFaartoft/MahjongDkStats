@@ -1,12 +1,12 @@
 ﻿namespace MahjongDkStatsCalculators.Calculators;
 
-internal class GlobalCountsCalculator : StatisticsCalculatorBase
+internal class GlobalCountsCalculator
 {
 	protected int _gameCount = 0;
 	protected int _windsCount = 0;
 	protected int _handsCount = 0;
 
-	public override void AppendGame(Game game, Ruleset ruleset)
+	internal void AppendGame(Game game, Ruleset ruleset)
 	{
 		_gameCount++;
 		_windsCount += game.NumberOfWinds;
@@ -16,7 +16,7 @@ internal class GlobalCountsCalculator : StatisticsCalculatorBase
 	private const decimal TileWidthInM = .02M;
 	private const int MinutesPerBuildAndShuffle = 2;
 
-	public override GlobalStatistics GetGlobalStatistics()
+	internal GlobalStatistics GetGlobalStatistics()
 	{
 		return new GlobalStatistics(
 			_gameCount,

@@ -6,8 +6,8 @@ public interface IStatsCalculator
 
     GlobalStatistics GetGlobalStatistics();
 
-    IEnumerable<Statistic> GetGlobalMcrStatistics();
-    IEnumerable<Statistic> GetGlobalRiichiStatistics();
+    RuleSetRecords GetMcrRecords();
+    RuleSetRecords GetRiichiRecords();
 
     IEnumerable<PlayerStatistics> GetPlayerStatistics();
 }
