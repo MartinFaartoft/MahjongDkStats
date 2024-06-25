@@ -5,7 +5,6 @@
 * {
     margin: 0;
     padding: 0;
-    
 }
 
 body {
@@ -13,6 +12,14 @@ body {
     font-optical-sizing: auto;
     font-weight: normal;
     font-style: normal;
+}
+
+a, a:visited {
+    color: #9C0000;
+}
+
+a:hover {
+    color: #DC0000;
 }
 
 .heading {
@@ -37,6 +44,16 @@ h2 {
     font-size: 28px;
 }
 
+h3 {
+    margin: 50px;
+    border-bottom: 2px solid #B98788;
+    font-size: 22px;
+}
+
+h4 {
+    font-size: 22px;
+}
+
 .logo {
     margin: 25px 50px;
 }
@@ -44,6 +61,12 @@ h2 {
 section {
     max-width: 1000px;
     margin: 0 auto;
+}
+
+section .graphs {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
 }
 
 .statistics {
@@ -77,12 +100,19 @@ section {
     height: 100px;
 }
 
+.stat-text {
+    height: 100px;
+    font-size: 100px;
+    padding-bottom: 5px;
+}
+
 .rulesets-overview  {
     padding-bottom: 2rem;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     width: 100%;
+    font-size: 1.2rem;
 }
 
 .ruleset-overview {
@@ -129,23 +159,28 @@ section {
 
 /* Active Players */
 
-.active-players {
+.player-table {
     font-size: 1.2rem;
     display: flex;
     justify-content: center;
 }
 
-.active-players td,th {
+.player-table td, .player-table th {
     padding: 6px;
     white-space: nowrap;
 }
 
-.active-players th {
+.player-table th {
     text-align: left;
 }
 
-.ruleset-header {
-    column-span: 4;
+.head-to-head {
+    font-size: 1.2rem;
+}
+
+.head-to-head td, .player-table th {
+    padding: 6px;
+    white-space: nowrap;
 }
 
 footer {
@@ -162,19 +197,22 @@ footer div {
     padding: 40px;
 }
 
-footer a {
+footer a, footer a:visited, footer a:hover {
     color: white;
     text-decoration: none;
+}
+
+.single-line {
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.highlight {
+    font-weight: bold;
 }
 
 @media screen and (max-width: 1037px) {
     .extra {
         display:none;
     }
-
-    .ruleset-header {
-        column-span: 2;
-    }
-
-
 }

@@ -58,6 +58,7 @@ internal class PlayerStatisticsCalculator
 		stats.MaxRating = stats.MaxRating > player.NewRating ? stats.MaxRating : player.NewRating;
 		stats.GameCount++;
 		stats.WindCount += game.NumberOfWinds;
+		stats.HandCount += game.NumberOfWinds * game.Players.Count();
 		stats.ScoreSum += player.Score;
 		_winningStreakCalculator.AddGame(player, ruleset, game);
 		stats.RecordGameScore = player.Score > stats.RecordGameScore.RecordValue
@@ -109,6 +110,7 @@ internal class PlayerStatisticsCalculator
 					ratingListPosition,
 					rulesetStats.GameCount,
 					rulesetStats.WindCount,
+					rulesetStats.HandCount,
 					rulesetStats.MaxRating,
 					currentRating,
 					latestGame?.DateOfGame ?? DateOnly.MinValue,
@@ -170,6 +172,8 @@ internal class PlayerStatisticsCalculator
 		public int GameCount { get; set; }
 
 		public int WindCount { get; set; }
+
+		public int HandCount { get; set; }
 
 		public int ScoreSum { get; set; }
 

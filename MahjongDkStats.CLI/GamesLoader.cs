@@ -13,4 +13,11 @@ public class GamesLoader
         
         return JsonSerializer.Deserialize<IEnumerable<Game>>(json)!.OrderBy(g => g.Id);
     }
+
+    public async Task<IEnumerable<Game>> LoadGamesFromFileAsync(string path)
+    {
+        var json = await File.ReadAllTextAsync(path);
+
+        return JsonSerializer.Deserialize<IEnumerable<Game>>(json)!.OrderBy(g => g.Id);
+    }
 }

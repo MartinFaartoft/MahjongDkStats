@@ -6,6 +6,7 @@ public record PlayerRulesetStatistics(
 	DateTimeChart RatingListPosition,
 	int GameCount,
 	int WindCount,
+	int HandCount,
 	decimal MaxRating,
 	decimal CurrentRating,
 	DateOnly LatestGame,

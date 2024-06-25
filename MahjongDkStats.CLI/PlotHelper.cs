@@ -5,7 +5,7 @@ namespace MahjongDkStats.CLI
 {
 	internal class PlotHelper
 	{
-		private const string PlotBackgroundColorHex = "#F9F9F9";
+		private const string PlotBackgroundColorHex = "#FFFFFF";
 		private const string PlotLineColorHex = "#9C0000";
 
 		internal static Plot CreateDateTimePlot(DateTimeChart data, string title)

@@ -3,9 +3,14 @@
 <html lang="en">
 <Header />
 <body>
-	<h1>Statistics for @PlayerStats.Name</h1>
-	<PlayerPageRulesetSection PlayerName="@PlayerStats.Name" RulesetStatistics="@PlayerStats.McrStatistics" />
-	<PlayerPageRulesetSection PlayerName="@PlayerStats.Name" RulesetStatistics="@PlayerStats.RiichiStatistics" />
+	<a href="https://mahjong.dk"><img class="logo" src="img/mjdk-logo.jpg"></a>
+	<h1 class="banner heading">Statistics for @PlayerStats.Name</h1>
+	<section>
+		<PlayerPageRulesetSection PlayerName="@PlayerStats.Name" RulesetStatistics="@PlayerStats.McrStatistics" />
+	</section>
+	<section>
+		<PlayerPageRulesetSection PlayerName="@PlayerStats.Name" RulesetStatistics="@PlayerStats.RiichiStatistics" />
+	</section>
 	<Footer />
 </body>
 </html>

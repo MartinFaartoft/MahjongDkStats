@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MahjongDkStats.CLI;
-using ScottPlot;
 using System.Globalization;
 using System.Diagnostics;
 
@@ -13,6 +12,10 @@ public class Program
 {
     const string McrGamesUrl = "https://raw.githubusercontent.com/MartinFaartoft/MahjongDkScraper/main/data/mcr_games_full.json";
     const string RiichiGamesUrl = "https://raw.githubusercontent.com/MartinFaartoft/MahjongDkScraper/main/data/riichi_games_full.json";
+    const string LocalMcrGamesUrl = "../MahjongDkScraper/data/mcr_games_full.json";
+    const string LocalRiichiGamesUrl = "../MahjongDkScraper/data/riichi_games_full.json";
+    const bool _generatePlots = true;
+    const bool _useLocalGamesData = false;
 
     private static async Task Main(string[] args)
     {
@@ -30,8 +33,9 @@ public class Program
         var stopwatch = new Stopwatch();
         stopwatch.Start();
         var gamesLoader = new GamesLoader();
-        var mcrGames = await gamesLoader.LoadGamesAsync(McrGamesUrl);
-        var riichiGames = await gamesLoader.LoadGamesAsync(RiichiGamesUrl);
+        
+        var mcrGames = await (_useLocalGamesData ? gamesLoader.LoadGamesFromFileAsync(LocalMcrGamesUrl) : gamesLoader.LoadGamesAsync(McrGamesUrl));
+        var riichiGames = await (_useLocalGamesData ? gamesLoader.LoadGamesFromFileAsync(LocalRiichiGamesUrl) : gamesLoader.LoadGamesAsync(RiichiGamesUrl));
         Console.WriteLine($"Loaded game data in {stopwatch.ElapsedMilliseconds}ms");
         stopwatch.Restart();
 
@@ -78,10 +82,13 @@ public class Program
 			.ToArray();
 	}
 
+    private const int _plotWidth = 1000;
+    private const int _plotHeight = 563;
+
 	private static async Task RenderHtmlSite(StatisticsResult result, DateOnly newestGameDate, HtmlRenderer htmlRenderer)
     {
 		Dictionary<string, object?> parameters = new Dictionary<string, object?> { { "Stats", result }, { "NewestGameDate", newestGameDate } };
-        var html = await RenderPageToHtml<NewIndexPage>(parameters, htmlRenderer);
+        var html = await RenderPageToHtml<IndexPage>(parameters, htmlRenderer);
         await File.WriteAllTextAsync("dist/index.html", html);
 
         var aboutHtml = await RenderPageToHtml<AboutPage>([], htmlRenderer);
@@ -97,19 +104,21 @@ public class Program
                 RenderPageToHtml<PlayerPage>(playerParameters, htmlRenderer)
                 .ContinueWith(a => File.WriteAllTextAsync($"dist/{NameSanitizer.SanitizeForUrlUsage(player.Name)}.html", a.Result))
                 );
-
-			tasks.Add(Task.Run(()
-                => PlotHelper.CreateDateTimePlot(player.McrStatistics.Rating, $"MCR rating - {player.Name}")
-                .SavePng($"dist/img/{NameSanitizer.SanitizeForUrlUsage(player.Name)}-mcr-rating.png", 600, 338)));
-			tasks.Add(Task.Run(()
-				=> PlotHelper.CreatingInvertedYDateTimePlot(player.McrStatistics.RatingListPosition, $"MCR ratinglist position - {player.Name}")
-				.SavePng($"dist/img/{NameSanitizer.SanitizeForUrlUsage(player.Name)}-mcr-position.png", 600, 338)));
-			tasks.Add(Task.Run(()
-                => PlotHelper.CreateDateTimePlot(player.RiichiStatistics.Rating, $"Riichi rating - {player.Name}")
-                .SavePng($"dist/img/{NameSanitizer.SanitizeForUrlUsage(player.Name)}-riichi-rating.png", 600, 338)));
-			tasks.Add(Task.Run(()
-				=> PlotHelper.CreatingInvertedYDateTimePlot(player.RiichiStatistics.RatingListPosition, $"Riichi ratinglist position - {player.Name}")
-				.SavePng($"dist/img/{NameSanitizer.SanitizeForUrlUsage(player.Name)}-riichi-position.png", 600, 338)));
+            if (_generatePlots)
+            {
+                tasks.Add(Task.Run(()
+                    => PlotHelper.CreateDateTimePlot(player.McrStatistics.Rating, $"MCR rating - {player.Name}")
+                    .SavePng($"dist/img/{NameSanitizer.SanitizeForUrlUsage(player.Name)}-mcr-rating.png", _plotWidth, _plotHeight)));
+                tasks.Add(Task.Run(()
+                    => PlotHelper.CreatingInvertedYDateTimePlot(player.McrStatistics.RatingListPosition, $"MCR ratinglist position - {player.Name}")
+                    .SavePng($"dist/img/{NameSanitizer.SanitizeForUrlUsage(player.Name)}-mcr-position.png", _plotWidth, _plotHeight)));
+                tasks.Add(Task.Run(()
+                    => PlotHelper.CreateDateTimePlot(player.RiichiStatistics.Rating, $"Riichi rating - {player.Name}")
+                    .SavePng($"dist/img/{NameSanitizer.SanitizeForUrlUsage(player.Name)}-riichi-rating.png", _plotWidth, _plotHeight)));
+                tasks.Add(Task.Run(()
+                    => PlotHelper.CreatingInvertedYDateTimePlot(player.RiichiStatistics.RatingListPosition, $"Riichi ratinglist position - {player.Name}")
+                    .SavePng($"dist/img/{NameSanitizer.SanitizeForUrlUsage(player.Name)}-riichi-position.png", _plotWidth, _plotHeight)));
+            }
 		}
 
         Task.WaitAll(tasks.ToArray());

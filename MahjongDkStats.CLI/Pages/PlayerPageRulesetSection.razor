@@ -5,96 +5,120 @@
 @if (RulesetStatistics.GameCount > 0)
 {
 	var highestRatingListPositionEntry = RulesetStatistics.RatingListPositionHistory.MinBy(rlph => rlph.RatingListPosition)!;
-	<table>
-		<tr>
-			<td>Games played</td>
-			<td>@RulesetStatistics.GameCount</td>
-		</tr>
-		<tr>
-			<td>Highest rating achieved</td>
-			<td>@RulesetStatistics.MaxRating</td>
-		</tr>
-		<tr>
-			<td>Highest rating list position achieved</td>
-			<td>#@highestRatingListPositionEntry.RatingListPosition on @highestRatingListPositionEntry.StartDate</td>
-		</tr>
-		<tr>
-			<td>Highest scoring game</td>
-			<td>@(RulesetStatistics.RecordGameScore.RecordValue) on @(RulesetStatistics.RecordGameScore.Game.DateOfGame)</td>
-		</tr>
-		<tr>
-			<td>Score sum</td>
-			<td>@RulesetStatistics.ScoreSum</td>
-		</tr>
-		<tr>
-				<td>Longest winning streak<sup><dfn class="helptext" title="Consecutive games with positive score.">&nbsp;?</dfn></sup></td>
-				<td>@(RulesetStatistics.LongestWinningStreak.RecordValue) starting on @(RulesetStatistics.LongestWinningStreak.Game.DateOfGame)</td>
-		</tr>
-		<tr>
-			<td>Score per wind</td>
-			<td>@RulesetStatistics.ScorePerWind</td>
-		</tr>
-	</table>
-	<img src="img/@Helpers.CreateRatingPlotUrl(@PlayerName, @RulesetStatistics.Ruleset)" />
+	<section class="statistics">
+		<div>
+			<img class="stat-icon" src="img/games.png">
+			<p class="stat-value">@RulesetStatistics.GameCount</p>
+			<p class="stat-name">Games</p>
+		</div>
+		<div>
+			<img class="stat-icon" src="img/winds.jpg">
+			<p class="stat-value">@RulesetStatistics.WindCount</p>
+			<p class="stat-name">Winds</p>
+		</div>
+		<div>
+			<img class="stat-icon" src="img/hands.jpg">
+			<p class="stat-value">@RulesetStatistics.HandCount</p>
+			<p class="stat-name">Hands</p>
+		</div>
+		<div>
+			<p class="stat-text">?</p>
+			<p class="stat-value">@RulesetStatistics.ScorePerWind</p>
+			<p class="stat-name">Score per wind</p>
+		</div>
+		<div>
+			<p class="stat-text">&Sigma;</p>
+			<p class="stat-value">@RulesetStatistics.ScoreSum</p>
+			<p class="stat-name">Score sum</p>
+		</div>
+		<div>
+			<p class="stat-text">?</p>
+			<p class="stat-value">@RulesetStatistics.MaxRating</p>
+			<p class="stat-name">Highest rating</p>
+		</div>
+		<div>
+			<p class="stat-text">?</p>
+			<p class="stat-value">#@highestRatingListPositionEntry.RatingListPosition</p>
+			<p class="stat-name">Highest position on @highestRatingListPositionEntry.StartDate</p>
+		</div>
+		<div>
+			<p class="stat-text">?</p>
+			<p class="stat-value">@RulesetStatistics.RecordGameScore.RecordValue</p>
+			<p class="stat-name">Highest score on @RulesetStatistics.RecordGameScore.Game.DateOfGame</p>
+		</div>
+		<div>
+			<p class="stat-text">?</p>
+			<p class="stat-value">@RulesetStatistics.LongestWinningStreak.RecordValue</p>
+			<p class="stat-name">Longest winning streak on @RulesetStatistics.LongestWinningStreak.Game.DateOfGame</p>
+		</div>
 
-	<img src="img/@Helpers.CreateRatingPositionPlotUrl(@PlayerName, @RulesetStatistics.Ruleset)" />
+	</section>
+	
+	<section class="graphs">
+		<img src="img/@Helpers.CreateRatingPlotUrl(@PlayerName, @RulesetStatistics.Ruleset)" />
+		<img src="img/@Helpers.CreateRatingPositionPlotUrl(@PlayerName, @RulesetStatistics.Ruleset)" />
+	</section>
 
 	<h3>Latest games</h3>
-	<table>
-		<thead>
-			<tr>
-				<th>Date</th>
-				<th>Diff.</th>
-				<th>Winds</th>
-				<th rowspan="7">Players</th>
-			</tr>
-		</thead>
-		<tbody>
-			@foreach (var game in RulesetStatistics.GameHistory.TakeLast(10).OrderByDescending(g => g.Id))
-			{
+	<section class="player-table">
+		<table>
+			<thead>
 				<tr>
-					<td>@game.DateOfGame</td>
-					<td>@game.Difficulty</td>
-					<td>@game.NumberOfWinds</td>
-					@foreach(var player in game.Players)
-					{
-						<td class="single-line @(PlayerName == player.Name ? "highlight" : "")">
-							<a href='@Helpers.CreatePlayerUrl(player.Name)'>@Helpers.ShortenName(player.Name)</a><br /> @player.Score
-						</td>
-					}
+					<th>Date</th>
+					<th>Diff.</th>
+					<th>Winds</th>
+					<th rowspan="7">Players</th>
 				</tr>
-			}
-		</tbody>
-	</table>
+			</thead>
+			<tbody>
+				@foreach (var game in RulesetStatistics.GameHistory.TakeLast(10).OrderByDescending(g => g.Id))
+				{
+					<tr>
+						<td>@game.DateOfGame</td>
+						<td>@game.Difficulty</td>
+						<td>@game.NumberOfWinds</td>
+						@foreach(var player in game.Players)
+						{
+							<td class="single-line @(PlayerName == player.Name ? "highlight" : "")">
+								<a href='@Helpers.CreatePlayerUrl(player.Name)'>@Helpers.ShortenName(player.Name)</a><br /> @player.Score
+							</td>
+						}
+					</tr>
+				}
+			</tbody>
+		</table>
+	</section>
 
 	<h3>Head to Head statistics</h3>
-	<table class="sortable">
-		<thead>
-			<tr>
-				<th>Opponent</th>
-				<th>Sum</th>
-				<th>Score / wind</th>
-				<th>Diff</th>
-				<th aria-sort="descending">Diff / wind</th>
-				<th>Games</th>
-				<th>Winds</th>
-			</tr>
-		</thead>
-		<tbody>
-			@foreach (var entry in RulesetStatistics.HeadToHeadStatistics)
-			{
+	<section class="player-table">
+		<table class="sortable">
+			<thead>
 				<tr>
-					<td><a href='@Helpers.CreatePlayerUrl(entry.OpponentName)'>@entry.OpponentName</a></td>
-					<td>@entry.ScoreSumAgainst</td>
-					<td data-sort="@Helpers.RemoveDecimalMarker(entry.ScorePerWindAgainst)">@entry.ScorePerWindAgainst</td>
-					<td>@entry.ScoreDeltaAgainst</td>
-					<td data-sort="@Helpers.RemoveDecimalMarker(entry.ScoreDeltaPerWindAgainst)">@entry.ScoreDeltaPerWindAgainst</td>
-					<td>@entry.GamesPlayedAgainst</td>
-					<td>@entry.WindsPlayedAgainst</td>
+					<th>Opponent</th>
+					<th>Sum</th>
+					<th>Score / wind</th>
+					<th>Diff</th>
+					<th aria-sort="descending">Diff / wind</th>
+					<th>Games</th>
+					<th>Winds</th>
 				</tr>
-			}
-		</tbody>
-	</table>
+			</thead>
+			<tbody>
+				@foreach (var entry in RulesetStatistics.HeadToHeadStatistics)
+				{
+					<tr>
+						<td><a href='@Helpers.CreatePlayerUrl(entry.OpponentName)'>@entry.OpponentName</a></td>
+						<td class="right">@entry.ScoreSumAgainst</td>
+						<td class="right" data-sort="@Helpers.RemoveDecimalMarker(entry.ScorePerWindAgainst)">@entry.ScorePerWindAgainst</td>
+						<td class="right">@entry.ScoreDeltaAgainst</td>
+						<td class="right" data-sort="@Helpers.RemoveDecimalMarker(entry.ScoreDeltaPerWindAgainst)">@entry.ScoreDeltaPerWindAgainst</td>
+						<td class="right">@entry.GamesPlayedAgainst</td>
+						<td class="right">@entry.WindsPlayedAgainst</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</section>
 } else
 {
 	<p>No @Helpers.GetRulesetName(RulesetStatistics.Ruleset) games on record</p>

@@ -4,70 +4,149 @@
 <html lang="en">
 <Header />
 <body>
-	<h1>Mahjong Danmark - Statistics</h1>
-	<p class="right">@NewestGameDate</p>
-	<h2 id="mcr">MCR</h2>
-
-	<h3>Rating List<sup><dfn class="helptext" title="Players are included if they have a game played within the last 12 months.">&nbsp;?</dfn></sup></h3>
-	<table class="sortable">
-		<thead>
-			<tr>
-				<th aria-sort="ascending">#</th>
-				<th>Name</th>
-				<th>Rating</th>
-				<th>Games</th>
-			</tr>
-		</thead>
-		<tbody>
-		@foreach (var entry in Stats.McrRatingList)
-		{
-			<tr>
-				<td>@entry.Position</td>
-				<td><a href='@Helpers.CreatePlayerUrl(entry.Name)'>@entry.Name</a></td>
-				<td data-sort="@Helpers.RemoveDecimalMarker(entry.Rating)">@entry.Rating</td>
-				<td>@entry.GamesPlayed</td>
-			</tr>
-		}
-		</tbody>
-	</table>
-
-	<h2 id="riichi">Riichi</h2>
-
-
-	<h3>Rating List<sup><dfn class="helptext" title="Players are included if they have a game played within the last 12 months.">&nbsp;?</dfn></sup></h3>
-	<table class="sortable">
-		<thead>
-			<tr>
-				<th aria-sort="ascending">#</th>
-				<th>Name</th>
-				<th>Rating</th>
-				<th>Games</th>
-			</tr>
-		</thead>
-		<tbody>
-			@foreach (var entry in Stats.RiichiRatingList)
-			{
-				<tr>
-					<td>@entry.Position</td>
-					<td><a href='@Helpers.CreatePlayerUrl(entry.Name)'>@entry.Name</a></td>
-					<td data-sort="@Helpers.RemoveDecimalMarker(entry.Rating)">@entry.Rating</td>
-					<td>@entry.GamesPlayed</td>
-				</tr>
-			}
-		</tbody>
-	</table>
-
-	<h2>Statistics across rulesets</h2>
-	<table>
-	</table>
-	<Footer />
+    <a href="https://mahjong.dk"><img class="logo" src="img/mjdk-logo.jpg"></a>
+    <h1 class="banner heading">Game Statistics of Mahjong Danmark</h1>
+    <h2 class="heading">Overview</h2>
+    <p class="right">@NewestGameDate</p>
+    <section class="statistics">
+        <div>
+            <img class="stat-icon" src="img/games.png">
+            <p class="stat-value">@Stats.GlobalStatistics.TotalGameCount</p>
+            <p class="stat-name">Games</p>
+        </div>
+        <div>
+            <img class="stat-icon" src="img/winds.jpg">
+            <p class="stat-value">@Stats.GlobalStatistics.TotalWindsCount</p>
+            <p class="stat-name">Winds</p>
+        </div>
+        <div>
+            <img class="stat-icon" src="img/hands.jpg">
+            <p class="stat-value">@Stats.GlobalStatistics.TotalHandsCount</p>
+            <p class="stat-name">Hands</p>
+        </div>
+        <div>
+            <img class="stat-icon" src="img/players.png">
+            <p class="stat-value">@Stats.GlobalStatistics.TotalPlayerCount</p>
+            <p class="stat-name">Players</p>
+        </div>
+        <div>
+            <img class="stat-icon" src="img/active-players.png">
+            <p class="stat-value">@Stats.GlobalStatistics.ActivePlayerCount</p>
+            <p class="stat-name">Active players</p>
+        </div>
+        <div>
+            <img class="stat-icon" src="img/clock.jpg">
+            <p class="stat-value">@(Math.Round(Stats.GlobalStatistics.TimeSpentShufflingAndBuilding.TotalDays, 2))</p>
+            <p class="stat-name">Days spent building walls</p>
+        </div>
+        <div>
+            <img class="stat-icon" src="img/wall.png">
+            <p class="stat-value">@(Math.Round(Stats.GlobalStatistics.TotalWallLengthMeters / 1000m, 2))km</p>
+            <p class="stat-name">Walls built</p>
+        </div>
+    </section>
+    <h2 class="heading">Best scores and ratings</h2>
+    <section class="rulesets-overview">
+        <section class="ruleset-overview mcr">
+            <h4 class="heading center">MCR</h4>
+            <table>
+                <tbody>
+                    <tr>
+                        <td class="label">Best game: <PlayerLink Name="@Stats.McrRecords.RecordScore.PlayerName" Shorten="true" /></td>
+                        <td class="right">@(Stats.McrRecords.RecordScore.RecordValue)</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Best recent game: <PlayerLink Name="@Stats.McrRecords.RecordRecentScore.PlayerName" Shorten="true" /></td>
+                        <td class="right">@(Stats.McrRecords.RecordRecentScore.RecordValue)</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Best rating: <PlayerLink Name="@Stats.McrRecords.RecordRating.PlayerName" Shorten="true" /></td>
+                        <td class="right">@(Stats.McrRecords.RecordRating.RecordValue)</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Best recent rating: <PlayerLink Name="@Stats.McrRecords.RecordRecentRating.PlayerName" Shorten="true" /></td>
+                        <td class="right">@(Stats.McrRecords.RecordRecentRating.RecordValue)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+        <section class="ruleset-overview riichi">
+            <h4 class="heading center">Riichi</h4>
+            <table>
+                <tbody>
+                    <tr>
+                        <td class="label">Best game: <PlayerLink Name="@Stats.RiichiRecords.RecordScore.PlayerName" Shorten="true" /></td>
+                        <td class="right">@(Stats.RiichiRecords.RecordScore.RecordValue)</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Best recent game: <PlayerLink Name="@Stats.RiichiRecords.RecordRecentScore.PlayerName" Shorten="true" /></td>
+                        <td class="right">@(Stats.RiichiRecords.RecordRecentScore.RecordValue)</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Best rating: <PlayerLink Name="@Stats.RiichiRecords.RecordRating.PlayerName" Shorten="true" /></td>
+                        <td class="right">@(Stats.RiichiRecords.RecordRating.RecordValue)</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Best recent rating: <PlayerLink Name="@Stats.RiichiRecords.RecordRecentRating.PlayerName" Shorten="true" /></td>
+                        <td class="right">@(Stats.RiichiRecords.RecordRecentRating.RecordValue)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </section>
+    <h2 class="heading">Active Players Statistics</h2>
+    <section class="player-table sortable">
+        <table class="sortable">
+            <thead>
+                <tr>
+                    <th class="no-sort"></th>
+                    <th class="left no-sort">MCR</th>
+                    <th class="no-sort"></th>
+                    <th class="no-sort extra"></th>
+                    <th class="no-sort extra"></th>
+                    <th class="left no-sort">Riichi</th>
+                    <th class="no-sort"></th>
+                    <th class="no-sort extra"></th>
+                    <th class="no-sort extra"></th>
+                </tr>
+                <tr>
+                    <th aria-sort="ascending">Name</th>
+                    <th>Rating</th>
+                    <th class="extra">Score/wind</th>
+                    <th>Games</th>
+                    <th class="extra">Winds</th>
+                    <th>Rating</th>
+                    <th class="extra">Score/wind</th>
+                    <th>Games</th>
+                    <th class="extra">Winds</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var entry in Stats.PlayerStatistics.Where(p => p.IsActive).OrderBy(p => p.Name))
+                {
+                    <tr>
+                        <td><PlayerLink Name="@entry.Name" /></td>
+                        <td class="right" data-sort="@Helpers.RemoveDecimalMarker(entry.McrStatistics.CurrentRating)">@entry.McrStatistics.CurrentRating</td>
+                        <td class="right extra" data-sort="@Helpers.RemoveDecimalMarker(entry.McrStatistics.ScorePerWind)">@entry.McrStatistics.ScorePerWind</td>
+                        <td class="right">@entry.McrStatistics.GameCount</td>
+                        <td class="right extra">@entry.McrStatistics.WindCount</td>
+                        <td class="right" data-sort="@Helpers.RemoveDecimalMarker(entry.RiichiStatistics.CurrentRating)">@entry.RiichiStatistics.CurrentRating</td>
+                        <td class="right extra" data-sort="@Helpers.RemoveDecimalMarker(entry.RiichiStatistics.ScorePerWind)">@entry.RiichiStatistics.ScorePerWind</td>
+                        <td class="right">@entry.RiichiStatistics.GameCount</td>
+                        <td class="right extra">@entry.RiichiStatistics.WindCount</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </section>
+    <Footer />
 </body>
 </html>
 
 @code {
-	[Parameter]
-	public StatisticsResult Stats { get; set; } = null!;
+    [Parameter]
+    public StatisticsResult Stats { get; set; } = null!;
 
-	[Parameter]
-	public DateOnly NewestGameDate { get; set; }
+    [Parameter]
+    public DateOnly NewestGameDate { get; set; }
 }
