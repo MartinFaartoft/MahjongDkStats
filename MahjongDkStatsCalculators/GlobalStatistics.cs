@@ -1,3 +1,10 @@
 ﻿namespace MahjongDkStatsCalculators;
 
-public record GlobalStatistics(int TotalGameCount, int TotalWindsCount, int TotalHandsCount, TimeSpan TimeSpentShufflingAndBuilding, decimal TotalWallLengthMeters);
+public record GlobalStatistics(
+    int TotalGameCount,
+    int TotalWindsCount,
+    int TotalHandsCount,
+    int TotalPlayerCount,
+    int ActivePlayerCount,
+    TimeSpan TimeSpentShufflingAndBuilding,
+    decimal TotalWallLengthMeters);
