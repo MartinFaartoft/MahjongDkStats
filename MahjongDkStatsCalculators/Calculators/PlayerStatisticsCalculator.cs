@@ -31,7 +31,8 @@ internal class PlayerStatisticsCalculator
 			kv.Value.GameCount,
 			kv.Value.LatestGame,
 			GetPlayerRulesetStatistics(kv.Value, Ruleset.Mcr),
-			GetPlayerRulesetStatistics(kv.Value, Ruleset.Riichi)));
+			GetPlayerRulesetStatistics(kv.Value, Ruleset.Riichi),
+			kv.Value.LatestGame.DateOfGame > Constants.ActiveThreshold));
 	}
 
 	private void UpdatePlayer(Player player, Game game, Ruleset ruleset)
@@ -107,6 +108,7 @@ internal class PlayerStatisticsCalculator
 					rating,
 					ratingListPosition,
 					rulesetStats.GameCount,
+					rulesetStats.WindCount,
 					rulesetStats.MaxRating,
 					currentRating,
 					latestGame?.DateOfGame ?? DateOnly.MinValue,

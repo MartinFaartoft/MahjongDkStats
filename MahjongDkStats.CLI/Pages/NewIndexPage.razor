@@ -52,19 +52,19 @@
             <table>
                 <tbody>
                     <tr>
-                        <td class="label">Best game: @(Stats.McrRecords.RecordScore.PlayerName)</td>
+                        <td class="label">Best game: <PlayerLink Name="@Stats.McrRecords.RecordScore.PlayerName" Shorten="true" /></td>
                         <td class="right">@(Stats.McrRecords.RecordScore.RecordValue)</td>
                     </tr>
                     <tr>
-                        <td class="label">Best recent game: @(Stats.McrRecords.RecordRecentScore.PlayerName)</td>
+                        <td class="label">Best recent game: <PlayerLink Name="@Stats.McrRecords.RecordRecentScore.PlayerName" Shorten="true" /></td>
                         <td class="right">@(Stats.McrRecords.RecordRecentScore.RecordValue)</td>
                     </tr>
                     <tr>
-                        <td class="label">Best rating: @(Stats.McrRecords.RecordRating.PlayerName)</td>
+                        <td class="label">Best rating: <PlayerLink Name="@Stats.McrRecords.RecordRating.PlayerName" Shorten="true" /></td>
                         <td class="right">@(Stats.McrRecords.RecordRating.RecordValue)</td>
                     </tr>
                     <tr>
-                        <td class="label">Best recent rating: @(Stats.McrRecords.RecordRecentRating.PlayerName)</td>
+                        <td class="label">Best recent rating: <PlayerLink Name="@Stats.McrRecords.RecordRecentRating.PlayerName" Shorten="true" /></td>
                         <td class="right">@(Stats.McrRecords.RecordRecentRating.RecordValue)</td>
                     </tr>
                 </tbody>
@@ -75,19 +75,19 @@
             <table>
                 <tbody>
                     <tr>
-                        <td class="label">Best game: @(Stats.RiichiRecords.RecordScore.PlayerName)</td>
+                        <td class="label">Best game: <PlayerLink Name="@Stats.RiichiRecords.RecordScore.PlayerName" Shorten="true" /></td>
                         <td class="right">@(Stats.RiichiRecords.RecordScore.RecordValue)</td>
                     </tr>
                     <tr>
-                        <td class="label">Best recent game: @(Stats.RiichiRecords.RecordRecentScore.PlayerName)</td>
+                        <td class="label">Best recent game: <PlayerLink Name="@Stats.RiichiRecords.RecordRecentScore.PlayerName" Shorten="true" /></td>
                         <td class="right">@(Stats.RiichiRecords.RecordRecentScore.RecordValue)</td>
                     </tr>
                     <tr>
-                        <td class="label">Best rating: @(Stats.RiichiRecords.RecordRating.PlayerName)</td>
+                        <td class="label">Best rating: <PlayerLink Name="@Stats.RiichiRecords.RecordRating.PlayerName" Shorten="true" /></td>
                         <td class="right">@(Stats.RiichiRecords.RecordRating.RecordValue)</td>
                     </tr>
                     <tr>
-                        <td class="label">Best recent rating: @(Stats.RiichiRecords.RecordRecentRating.PlayerName)</td>
+                        <td class="label">Best recent rating: <PlayerLink Name="@Stats.RiichiRecords.RecordRecentRating.PlayerName" Shorten="true" /></td>
                         <td class="right">@(Stats.RiichiRecords.RecordRecentRating.RecordValue)</td>
                     </tr>
                 </tbody>
@@ -122,40 +122,20 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>Jesper Nøhr</td>
-                    <td class="right">70,54</td>
-                    <td class="right extra">1.23</td>
-                    <td class="right">456</td>
-                    <td class="right extra">567</td>
-                    <td class="right">6012</td>
-                    <td class="right extra">1023</td>
-                    <td class="right">89</td>
-                    <td class="right extra">160</td>
-                </tr>
-                <tr>
-                    
-                    <td>Martin Faartoft</td>
-                    <td class="right">123</td>
-                    <td class="right extra">1.23</td>
-                    <td class="right">456</td>
-                    <td class="right extra">567</td>
-                    <td class="right">6012</td>
-                    <td class="right extra">1023</td>
-                    <td class="right">89</td>
-                    <td class="right extra">160</td>
-                </tr>
-                <tr>
-                    <td>Sheila Jakobsen</td>
-                    <td class="right">123</td>
-                    <td class="right extra">1.23</td>
-                    <td class="right">456</td>
-                    <td class="right extra">567</td>
-                    <td class="right">6012</td>
-                    <td class="right extra">1023</td>
-                    <td class="right">89</td>
-                    <td class="right extra">160</td>
-                </tr>
+                @foreach (var entry in Stats.PlayerStatistics.Where(p => p.IsActive).OrderBy(p => p.Name))
+                {
+                    <tr>
+                        <td>@entry.Name</td>
+                        <td class="right" data-sort="@Helpers.RemoveDecimalMarker(entry.McrStatistics.CurrentRating)">@entry.McrStatistics.CurrentRating</td>
+                        <td class="right extra" data-sort="@Helpers.RemoveDecimalMarker(entry.McrStatistics.ScorePerWind)">@entry.McrStatistics.ScorePerWind</td>
+                        <td class="right">@entry.McrStatistics.GameCount</td>
+                        <td class="right extra">@entry.McrStatistics.WindCount</td>
+                        <td class="right" data-sort="@Helpers.RemoveDecimalMarker(entry.RiichiStatistics.CurrentRating)">@entry.RiichiStatistics.CurrentRating</td>
+                        <td class="right extra" data-sort="@Helpers.RemoveDecimalMarker(entry.RiichiStatistics.ScorePerWind)">@entry.RiichiStatistics.ScorePerWind</td>
+                        <td class="right">@entry.RiichiStatistics.GameCount</td>
+                        <td class="right extra">@entry.RiichiStatistics.WindCount</td>
+                    </tr>
+                }
             </tbody>
         </table>
     </section>

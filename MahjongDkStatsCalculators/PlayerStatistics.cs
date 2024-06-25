@@ -5,5 +5,6 @@ public record PlayerStatistics(
 	int GamesPlayed,
 	Game MostRecentGame,
 	PlayerRulesetStatistics McrStatistics, 
-	PlayerRulesetStatistics RiichiStatistics
+	PlayerRulesetStatistics RiichiStatistics,
+	bool IsActive
 	);

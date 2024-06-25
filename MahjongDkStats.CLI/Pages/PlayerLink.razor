@@ -1,0 +1,9 @@
+﻿<a href="@(Helpers.CreatePlayerUrl(Name))">@(Shorten ? Helpers.ShortenName(Name) : Name)</a>
+
+@code {
+	[Parameter]
+	public bool Shorten { get; set; } = false;
+
+	[Parameter]
+	public string Name { get; set; } = null!;
+}
