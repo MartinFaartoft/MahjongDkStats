@@ -112,13 +112,13 @@
                 <tr>
                     <th aria-sort="ascending">Name</th>
                     <th>Rating</th>
-                    <th class="extra">Score/wind</th>
+                    <th>S/w</th>
                     <th>Games</th>
-                    <th class="extra">Winds</th>
+                    <th>Winds</th>
                     <th>Rating</th>
-                    <th class="extra">Score/wind</th>
+                    <th>S/w</th>
                     <th>Games</th>
-                    <th class="extra">Winds</th>
+                    <th>Winds</th>
                 </tr>
             </thead>
             <tbody>
@@ -127,13 +127,13 @@
                     <tr>
                         <td><PlayerLink Name="@entry.Name" /></td>
                         <td class="right" data-sort="@Helpers.RemoveDecimalMarker(entry.McrStatistics.CurrentRating)">@entry.McrStatistics.CurrentRating</td>
-                        <td class="right extra" data-sort="@Helpers.RemoveDecimalMarker(entry.McrStatistics.ScorePerWind)">@entry.McrStatistics.ScorePerWind</td>
+                        <td class="right" data-sort="@Helpers.RemoveDecimalMarker(entry.McrStatistics.ScorePerWind)">@entry.McrStatistics.ScorePerWind</td>
                         <td class="right">@entry.McrStatistics.GameCount</td>
-                        <td class="right extra">@entry.McrStatistics.WindCount</td>
+                        <td class="right">@entry.McrStatistics.WindCount</td>
                         <td class="right" data-sort="@Helpers.RemoveDecimalMarker(entry.RiichiStatistics.CurrentRating)">@entry.RiichiStatistics.CurrentRating</td>
-                        <td class="right extra" data-sort="@Helpers.RemoveDecimalMarker(entry.RiichiStatistics.ScorePerWind)">@entry.RiichiStatistics.ScorePerWind</td>
+                        <td class="right">@(Math.Round(entry.RiichiStatistics.ScorePerWind))</td>
                         <td class="right">@entry.RiichiStatistics.GameCount</td>
-                        <td class="right extra">@entry.RiichiStatistics.WindCount</td>
+                        <td class="right">@entry.RiichiStatistics.WindCount</td>
                     </tr>
                 }
             </tbody>

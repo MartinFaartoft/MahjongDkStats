@@ -47,5 +47,8 @@ public static class Helpers
 		};
 
 	public static string ShortenName(string name)
-		=> name.Substring(0, name.IndexOf(" ") + 2);
+		=> name.Trim()
+		.Split(' ', StringSplitOptions.RemoveEmptyEntries)
+		.Select((v, i) => i == 0 ? v : v.First().ToString())
+		.Aggregate((a, b) => a + " " + b);
 }

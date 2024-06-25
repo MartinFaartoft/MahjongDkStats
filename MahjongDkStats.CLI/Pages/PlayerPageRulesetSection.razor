@@ -55,8 +55,8 @@
 	</section>
 	
 	<section class="graphs">
-		<img src="img/@Helpers.CreateRatingPlotUrl(@PlayerName, @RulesetStatistics.Ruleset)" />
-		<img src="img/@Helpers.CreateRatingPositionPlotUrl(@PlayerName, @RulesetStatistics.Ruleset)" />
+		<img class="graph" src="img/@Helpers.CreateRatingPlotUrl(@PlayerName, @RulesetStatistics.Ruleset)" />
+		<img class="graph" src="img/@Helpers.CreateRatingPositionPlotUrl(@PlayerName, @RulesetStatistics.Ruleset)" />
 	</section>
 
 	<h3>Latest games</h3>
@@ -80,7 +80,7 @@
 						@foreach(var player in game.Players)
 						{
 							<td class="single-line @(PlayerName == player.Name ? "highlight" : "")">
-								<a href='@Helpers.CreatePlayerUrl(player.Name)'>@Helpers.ShortenName(player.Name)</a><br /> @player.Score
+								<PlayerLink Name="@player.Name" /><br /> @player.Score
 							</td>
 						}
 					</tr>
@@ -107,7 +107,7 @@
 				@foreach (var entry in RulesetStatistics.HeadToHeadStatistics)
 				{
 					<tr>
-						<td><a href='@Helpers.CreatePlayerUrl(entry.OpponentName)'>@entry.OpponentName</a></td>
+						<td><PlayerLink Name="@entry.OpponentName" /></td>
 						<td class="right">@entry.ScoreSumAgainst</td>
 						<td class="right" data-sort="@Helpers.RemoveDecimalMarker(entry.ScorePerWindAgainst)">@entry.ScorePerWindAgainst</td>
 						<td class="right">@entry.ScoreDeltaAgainst</td>

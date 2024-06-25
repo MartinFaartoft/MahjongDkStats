@@ -1,4 +1,4 @@
-﻿<a href="@(Helpers.CreatePlayerUrl(Name))">@(Shorten ? Helpers.ShortenName(Name) : Name)</a>
+﻿<a href="@(Helpers.CreatePlayerUrl(Name))">@(NeedsShortening(Name) ? Helpers.ShortenName(Name) : Name)</a>
 
 @code {
 	[Parameter]
@@ -6,4 +6,9 @@
 
 	[Parameter]
 	public string Name { get; set; } = null!;
+
+	[Parameter]
+	public int MaxLength { get; set; } = 20;
+
+	private bool NeedsShortening(string name) => Shorten || Name.Length > MaxLength;
 }

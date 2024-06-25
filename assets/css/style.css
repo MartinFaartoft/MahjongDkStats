@@ -69,6 +69,11 @@ section .graphs {
     flex-wrap: wrap;
 }
 
+.graph {
+    max-width: 100%;
+    height: auto;
+}
+
 .statistics {
     display: flex;
     flex-wrap: wrap;
@@ -161,8 +166,15 @@ section .graphs {
 
 .player-table {
     font-size: 1.2rem;
-    display: flex;
-    justify-content: center;
+    /*display: flex;
+    justify-content: center;*/
+    overflow: auto;
+}
+
+.player-table table {
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .player-table td, .player-table th {
@@ -209,10 +221,4 @@ footer a, footer a:visited, footer a:hover {
 
 .highlight {
     font-weight: bold;
-}
-
-@media screen and (max-width: 1037px) {
-    .extra {
-        display:none;
-    }
 }
