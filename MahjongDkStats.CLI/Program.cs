@@ -14,6 +14,7 @@ public class Program
     const string RiichiGamesUrl = "https://raw.githubusercontent.com/MartinFaartoft/MahjongDkScraper/main/data/riichi_games_full.json";
     const string LocalMcrGamesUrl = "../MahjongDkScraper/data/mcr_games_full.json";
     const string LocalRiichiGamesUrl = "../MahjongDkScraper/data/riichi_games_full.json";
+    const string MembersFilePath = "mjdk-members.txt";
     const bool _generatePlots = true;
     const bool _useLocalGamesData = false;
 
@@ -36,6 +37,8 @@ public class Program
         
         var mcrGames = await (_useLocalGamesData ? gamesLoader.LoadGamesFromFileAsync(LocalMcrGamesUrl) : gamesLoader.LoadGamesAsync(McrGamesUrl));
         var riichiGames = await (_useLocalGamesData ? gamesLoader.LoadGamesFromFileAsync(LocalRiichiGamesUrl) : gamesLoader.LoadGamesAsync(RiichiGamesUrl));
+        var members = await File.ReadAllLinesAsync(MembersFilePath);
+        var membersLookup = new HashSet<string>(members);
         Console.WriteLine($"Loaded game data in {stopwatch.ElapsedMilliseconds}ms");
         stopwatch.Restart();
 
@@ -53,6 +56,10 @@ public class Program
         var mcrRecords = statsCalculator.GetMcrRecords();
         var riichiRecords = statsCalculator.GetRiichiRecords();
         var playerStatistics = statsCalculator.GetPlayerStatistics().OrderBy(ps => ps.Name).ToArray();
+        var memberStatistics = playerStatistics.Where(p => membersLookup.Contains(p.Name)).ToArray();
+
+		EnsureMemberNamesMatch(memberStatistics, membersLookup);
+        
         RatingEntry[] mcrRatingList = CreateMcrRatingList(playerStatistics);
 		RatingEntry[] riichiRatingList = CreateRiichiRatingList(playerStatistics);
         var newestGameDate = mcrGames.Concat(riichiGames).MaxBy(g => g.DateOfGame)!.DateOfGame;
@@ -60,11 +67,22 @@ public class Program
 		stopwatch.Restart();
 
 
-		await RenderHtmlSite(new StatisticsResult(globalStatistics, mcrRecords, riichiRecords, playerStatistics, mcrRatingList, riichiRatingList), newestGameDate, htmlRenderer);
+		await RenderHtmlSite(new StatisticsResult(globalStatistics, mcrRecords, riichiRecords, playerStatistics, memberStatistics, mcrRatingList, riichiRatingList), newestGameDate, htmlRenderer);
 		Console.WriteLine($"Built static site in {stopwatch.ElapsedMilliseconds}ms");
     }
 
-    private static RatingEntry[] CreateMcrRatingList(IEnumerable<PlayerStatistics> playerStatistics)
+	private static void EnsureMemberNamesMatch(PlayerStatistics[] memberStatistics, HashSet<string> membersLookup)
+	{
+        foreach (var member in memberStatistics)
+        {
+            if(!membersLookup.Contains(member.Name))
+            {
+                Console.WriteLine("Missing member or wrong name: {}", member.Name);
+            }
+        }
+	}
+
+	private static RatingEntry[] CreateMcrRatingList(IEnumerable<PlayerStatistics> playerStatistics)
     {
         return playerStatistics
             .Where(ps => ps.McrStatistics.GameCount > 0 && ps.McrStatistics.LatestGame > Constants.ActiveThreshold)

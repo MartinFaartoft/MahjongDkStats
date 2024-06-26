@@ -94,7 +94,7 @@
             </table>
         </section>
     </section>
-    <h2 class="heading">Active Players Statistics</h2>
+    <h2 class="heading">Mahjong Danmark - Member Statistics</h2>
     <section class="player-table sortable">
         <table class="sortable">
             <thead>
@@ -122,7 +122,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var entry in Stats.PlayerStatistics.Where(p => p.IsActive).OrderBy(p => p.Name))
+                @foreach (var entry in Stats.MemberStatistics.OrderBy(p => p.Name))
                 {
                     <tr>
                         <td><PlayerLink Name="@entry.Name" /></td>

@@ -1,9 +1,8 @@
 ﻿@using MahjongDkStatsCalculators
 
-<h2>@Helpers.GetRulesetName(RulesetStatistics.Ruleset)</h2>
-
 @if (RulesetStatistics.GameCount > 0)
 {
+	<h2>@Helpers.GetRulesetName(RulesetStatistics.Ruleset)</h2>
 	var highestRatingListPositionEntry = RulesetStatistics.RatingListPositionHistory.MinBy(rlph => rlph.RatingListPosition)!;
 	<section class="statistics">
 		<div>
@@ -96,7 +95,7 @@
 				<tr>
 					<th>Opponent</th>
 					<th>Sum</th>
-					<th>Score / wind</th>
+					<th>S/w</th>
 					<th>Diff</th>
 					<th aria-sort="descending">Diff / wind</th>
 					<th>Games</th>
@@ -119,9 +118,6 @@
 			</tbody>
 		</table>
 	</section>
-} else
-{
-	<p>No @Helpers.GetRulesetName(RulesetStatistics.Ruleset) games on record</p>
 }
 
 @code {

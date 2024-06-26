@@ -5,6 +5,7 @@ public record StatisticsResult(
     RuleSetRecords McrRecords,
     RuleSetRecords RiichiRecords,
     PlayerStatistics[] PlayerStatistics,
-    RatingEntry[] McrRatingList,
+	PlayerStatistics[] MemberStatistics,
+	RatingEntry[] McrRatingList,
 	RatingEntry[] RiichiRatingList
 	);
