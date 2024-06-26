@@ -77,7 +77,7 @@ public class Program
         {
             if(!membersLookup.Contains(member.Name))
             {
-                Console.WriteLine("Missing member or wrong name: {}", member.Name);
+                Console.WriteLine("Missing member: {}", member.Name);
             }
         }
 	}

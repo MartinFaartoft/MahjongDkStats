@@ -2,7 +2,7 @@
 
 @if (RulesetStatistics.GameCount > 0)
 {
-	<h2>@Helpers.GetRulesetName(RulesetStatistics.Ruleset)</h2>
+	<Heading Text="@Helpers.GetRulesetName(RulesetStatistics.Ruleset)" />
 	var highestRatingListPositionEntry = RulesetStatistics.RatingListPositionHistory.MinBy(rlph => rlph.RatingListPosition)!;
 	<section class="statistics">
 		<div>
@@ -58,7 +58,7 @@
 		<img class="graph" src="img/@Helpers.CreateRatingPositionPlotUrl(@PlayerName, @RulesetStatistics.Ruleset)" />
 	</section>
 
-	<h3>Latest games</h3>
+	<h3 class="page">Latest games</h3>
 	<section class="player-table">
 		<table>
 			<thead>
@@ -88,7 +88,7 @@
 		</table>
 	</section>
 
-	<h3>Head to Head statistics</h3>
+	<h3 class="page">Head to Head statistics</h3>
 	<section class="player-table">
 		<table class="sortable">
 			<thead>

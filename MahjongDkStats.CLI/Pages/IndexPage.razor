@@ -4,10 +4,10 @@
 <html lang="en">
 <Header />
 <body>
-    <a href="https://mahjong.dk"><img class="logo" src="img/mjdk-logo.jpg"></a>
+    <Logo />
     <h1 class="banner heading">Game Statistics of Mahjong Danmark</h1>
-    <h2 class="heading">Overview</h2>
-    <p class="right">@NewestGameDate</p>
+    <div class="page"><p class="right">Last Updated: @NewestGameDate</p></div>
+    <Heading Text="Overview" />
     <section class="statistics">
         <div>
             <img class="stat-icon" src="img/games.png">
@@ -45,7 +45,7 @@
             <p class="stat-name">Walls built</p>
         </div>
     </section>
-    <h2 class="heading">Best scores and ratings</h2>
+    <Heading Text="Best scores and ratings" />
     <section class="rulesets-overview">
         <section class="ruleset-overview mcr">
             <h4 class="heading center">MCR</h4>
@@ -94,7 +94,7 @@
             </table>
         </section>
     </section>
-    <h2 class="heading">Mahjong Danmark - Member Statistics</h2>
+    <Heading Text="Mahjong Danmark - Member Statistics" />
     <section class="player-table sortable">
         <table class="sortable">
             <thead>
