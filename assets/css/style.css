@@ -1,5 +1,6 @@
 :root {
     --banner-bg-color: #27405E;
+    --green: #2CA02C;
 }
 
 * {
@@ -222,4 +223,8 @@ footer a, footer a:visited, footer a:hover {
 
 .highlight {
     font-weight: bold;
+}
+
+.positive {
+    color: var(--green);
 }

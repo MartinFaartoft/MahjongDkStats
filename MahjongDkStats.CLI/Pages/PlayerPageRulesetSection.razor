@@ -79,7 +79,7 @@
 						@foreach(var player in game.Players)
 						{
 							<td class="single-line @(PlayerName == player.Name ? "highlight" : "")">
-								<PlayerLink Name="@player.Name" Shorten="true" /><br /> @player.Score
+								<PlayerLink Name="@player.Name" Shorten="true" /><br /> <p class="@(PlayerName == player.Name && player.Score > 0 ? "positive" : "")">@player.Score</p>
 							</td>
 						}
 					</tr>
