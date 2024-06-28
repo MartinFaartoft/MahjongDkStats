@@ -7,8 +7,6 @@ using Microsoft.Extensions.Logging;
 using MahjongDkStats.CLI;
 using System.Globalization;
 using System.Diagnostics;
-using Microsoft.AspNetCore.Components.Forms;
-using System.Numerics;
 
 public class Program
 {
@@ -22,9 +20,8 @@ public class Program
 
     private static async Task Main(string[] args)
     {
-        FileSystemHelper.PrepareFoldersAndAssets();
-		CultureInfo.CurrentCulture = new CultureInfo("da-DK", false);
-		IServiceCollection services = new ServiceCollection();
+        CultureInfo.CurrentCulture = new CultureInfo("da-DK", false);
+        IServiceCollection services = new ServiceCollection();
         services.AddLogging();
         services.AddStatsCalculators();
 
@@ -35,15 +32,64 @@ public class Program
         var statsCalculator = serviceProvider.GetRequiredService<IStatsCalculator>();
         var stopwatch = new Stopwatch();
         stopwatch.Start();
-        var gamesLoader = new GamesLoader();
-        
-        var mcrGames = await (_useLocalGamesData ? gamesLoader.LoadGamesFromFileAsync(LocalMcrGamesUrl) : gamesLoader.LoadGamesAsync(McrGamesUrl));
-        var riichiGames = await (_useLocalGamesData ? gamesLoader.LoadGamesFromFileAsync(LocalRiichiGamesUrl) : gamesLoader.LoadGamesAsync(RiichiGamesUrl));
-        var members = await File.ReadAllLinesAsync(MembersFilePath);
-        var membersLookup = new HashSet<string>(members);
+
+        var (mcrGames, riichiGames, membersLookup) = await LoadData();
         Console.WriteLine($"Loaded game data in {stopwatch.ElapsedMilliseconds}ms");
         stopwatch.Restart();
 
+        CalculateStatistics(statsCalculator, mcrGames, riichiGames);
+        Console.WriteLine($"Calculated statistics in {stopwatch.ElapsedMilliseconds}ms");
+        stopwatch.Restart();
+        
+        var res = PrepareStatistics(statsCalculator, mcrGames, riichiGames, membersLookup);
+
+        FileSystemHelper.PrepareFoldersAndAssets();
+        await RenderSite(res, htmlRenderer);
+        Console.WriteLine($"Rendered site in {stopwatch.ElapsedMilliseconds}ms");
+    }
+
+    private static async Task<(IEnumerable<Game> mcrGames, IEnumerable<Game> riichiGames, HashSet<string> membersLookup)> LoadData()
+    {
+        var gamesLoader = new GamesLoader();
+
+        var mcrGamesTask = _useLocalGamesData ? gamesLoader.LoadGamesFromFileAsync(LocalMcrGamesUrl) : gamesLoader.LoadGamesAsync(McrGamesUrl);
+        var riichiGamesTask = _useLocalGamesData ? gamesLoader.LoadGamesFromFileAsync(LocalRiichiGamesUrl) : gamesLoader.LoadGamesAsync(RiichiGamesUrl);
+        var membersTask = File.ReadAllLinesAsync(MembersFilePath);
+
+        await Task.WhenAll(mcrGamesTask, riichiGamesTask, membersTask);
+
+        var membersLookup = new HashSet<string>(membersTask.Result);
+
+        return (mcrGamesTask.Result, riichiGamesTask.Result, membersLookup);
+    }
+
+    private static StatisticsResult PrepareStatistics(IStatsCalculator statsCalculator, IEnumerable<Game> mcrGames, IEnumerable<Game> riichiGames, HashSet<string> membersLookup)
+    {
+        var playerStatistics = statsCalculator.GetPlayerStatistics().OrderBy(ps => ps.Name).ToArray();
+        var memberStatistics = playerStatistics.Where(p => membersLookup.Contains(p.Name)).ToArray();
+        var activeMemberStatistics = memberStatistics.Where(p => p.IsActive).ToArray();
+
+        EnsureMemberNamesMatch(memberStatistics, membersLookup);
+
+        RatingEntry[] mcrRatingList = CreateMcrRatingList(activeMemberStatistics);
+        RatingEntry[] riichiRatingList = CreateRiichiRatingList(activeMemberStatistics);
+        var newestGameDate = mcrGames.Concat(riichiGames).MaxBy(g => g.DateOfGame)!.DateOfGame;
+
+
+        return new StatisticsResult(
+            statsCalculator.GetGlobalStatistics(),
+            statsCalculator.GetMcrRecords(),
+            statsCalculator.GetRiichiRecords(),
+            playerStatistics,
+            memberStatistics,
+            mcrRatingList,
+            riichiRatingList,
+            statsCalculator.GetYearStatistics().ToArray(),
+            newestGameDate);
+    }
+
+    private static void CalculateStatistics(IStatsCalculator statsCalculator, IEnumerable<Game> mcrGames, IEnumerable<Game> riichiGames)
+    {
         foreach (var game in mcrGames)
         {
             statsCalculator.AppendGame(game, Ruleset.Mcr);
@@ -53,34 +99,9 @@ public class Program
         {
             statsCalculator.AppendGame(game, Ruleset.Riichi);
         }
-
-        var playerStatistics = statsCalculator.GetPlayerStatistics().OrderBy(ps => ps.Name).ToArray();
-        var memberStatistics = playerStatistics.Where(p => membersLookup.Contains(p.Name)).ToArray();
-        var activeMemberStatistics = memberStatistics.Where(p => p.IsActive).ToArray();
-
-		EnsureMemberNamesMatch(memberStatistics, membersLookup);
-        
-        RatingEntry[] mcrRatingList = CreateMcrRatingList(activeMemberStatistics);
-		RatingEntry[] riichiRatingList = CreateRiichiRatingList(activeMemberStatistics);
-        var newestGameDate = mcrGames.Concat(riichiGames).MaxBy(g => g.DateOfGame)!.DateOfGame;
-		Console.WriteLine($"Calculated statistics in {stopwatch.ElapsedMilliseconds}ms");
-		stopwatch.Restart();
-
-        var res = new StatisticsResult(
-            statsCalculator.GetGlobalStatistics(),
-            statsCalculator.GetMcrRecords(),
-            statsCalculator.GetRiichiRecords(),
-            playerStatistics,
-            memberStatistics,
-            mcrRatingList,
-            riichiRatingList,
-            statsCalculator.GetYearStatistics().ToArray());
-
-        await RenderHtmlSite(res, newestGameDate, htmlRenderer);
-		Console.WriteLine($"Built static site in {stopwatch.ElapsedMilliseconds}ms");
     }
 
-	private static void EnsureMemberNamesMatch(PlayerStatistics[] memberStatistics, HashSet<string> membersLookup)
+    private static void EnsureMemberNamesMatch(PlayerStatistics[] memberStatistics, HashSet<string> membersLookup)
 	{
         foreach (var member in memberStatistics)
         {
@@ -112,14 +133,14 @@ public class Program
     private const int _plotWidth = 1000;
     private const int _plotHeight = 563;
 
-	private static async Task RenderHtmlSite(StatisticsResult result, DateOnly newestGameDate, HtmlRenderer htmlRenderer)
+	private static async Task RenderSite(StatisticsResult result, HtmlRenderer htmlRenderer)
     {
-		Dictionary<string, object?> parameters = new Dictionary<string, object?> { { "Stats", result }, { "NewestGameDate", newestGameDate } };
+		Dictionary<string, object?> parameters = new Dictionary<string, object?> { { "Stats", result } };
         var html = await RenderPageToHtml<IndexPage>(parameters, htmlRenderer);
-        await File.WriteAllTextAsync("dist/index.html", html);
+        await File.WriteAllTextAsync($"{FileSystemHelper.OutputFolderName}/index.html", html);
 
         var aboutHtml = await RenderPageToHtml<AboutPage>([], htmlRenderer);
-        await File.WriteAllTextAsync("dist/about.html", aboutHtml);
+        await File.WriteAllTextAsync($"{FileSystemHelper.OutputFolderName}/about.html", aboutHtml);
 
 
         var tasks = new List<Task>();
@@ -127,40 +148,38 @@ public class Program
 
         tasks.Add(Task.Run(()
         => PlotHelper.CreateGamesPerYearByRulesetPlot(result.YearStatistics)
-                    .SavePng($"dist/img/games-per-ruleset-plot.png", _plotWidth, _plotHeight)));
+                    .SavePng($"{FileSystemHelper.ImagesPath}/games-per-ruleset-plot.png", _plotWidth, _plotHeight)));
 
         tasks.Add(Task.Run(()
         => PlotHelper.CreateActivePlayersPerYearByRulesetPlot(result.YearStatistics)
-                    .SavePng($"dist/img/players-per-ruleset-plot.png", _plotWidth, _plotHeight)));
+                    .SavePng($"{FileSystemHelper.ImagesPath}/players-per-ruleset-plot.png", _plotWidth, _plotHeight)));
 
         foreach (var player in result.PlayerStatistics)
         {
 			Dictionary<string, object?> playerParameters = new Dictionary<string, object?> { { "PlayerStats", player } };
             tasks.Add(
                 RenderPageToHtml<PlayerPage>(playerParameters, htmlRenderer)
-                .ContinueWith(a => File.WriteAllTextAsync($"dist/{NameSanitizer.SanitizeForUrlUsage(player.Name)}.html", a.Result))
+                .ContinueWith(a => File.WriteAllTextAsync($"{FileSystemHelper.OutputFolderName}/{NameSanitizer.SanitizeForUrlUsage(player.Name)}.html", a.Result))
                 );
             if (_generatePlots)
             {
                 tasks.Add(Task.Run(()
                     => PlotHelper.CreateDateTimePlot(player.McrStatistics.Rating, $"MCR rating - {player.Name}")
-                    .SavePng($"dist/img/{NameSanitizer.SanitizeForUrlUsage(player.Name)}-mcr-rating.png", _plotWidth, _plotHeight)));
+                    .SavePng($"{FileSystemHelper.ImagesPath}/{NameSanitizer.SanitizeForUrlUsage(player.Name)}-mcr-rating.png", _plotWidth, _plotHeight)));
                 tasks.Add(Task.Run(()
                     => PlotHelper.CreateInvertedYDateTimePlot(player.McrStatistics.RatingListPosition, $"MCR ratinglist position - {player.Name}")
-                    .SavePng($"dist/img/{NameSanitizer.SanitizeForUrlUsage(player.Name)}-mcr-position.png", _plotWidth, _plotHeight)));
+                    .SavePng($"{FileSystemHelper.ImagesPath}/{NameSanitizer.SanitizeForUrlUsage(player.Name)}-mcr-position.png", _plotWidth, _plotHeight)));
                 tasks.Add(Task.Run(()
                     => PlotHelper.CreateDateTimePlot(player.RiichiStatistics.Rating, $"Riichi rating - {player.Name}")
-                    .SavePng($"dist/img/{NameSanitizer.SanitizeForUrlUsage(player.Name)}-riichi-rating.png", _plotWidth, _plotHeight)));
+                    .SavePng($"{FileSystemHelper.ImagesPath}/{NameSanitizer.SanitizeForUrlUsage(player.Name)}-riichi-rating.png", _plotWidth, _plotHeight)));
                 tasks.Add(Task.Run(()
                     => PlotHelper.CreateInvertedYDateTimePlot(player.RiichiStatistics.RatingListPosition, $"Riichi ratinglist position - {player.Name}")
-                    .SavePng($"dist/img/{NameSanitizer.SanitizeForUrlUsage(player.Name)}-riichi-position.png", _plotWidth, _plotHeight)));
+                    .SavePng($"{FileSystemHelper.ImagesPath}/{NameSanitizer.SanitizeForUrlUsage(player.Name)}-riichi-position.png", _plotWidth, _plotHeight)));
             }
 		}
 
         Task.WaitAll(tasks.ToArray());
 	}
-
-
 
 	private static async Task<string> RenderPageToHtml<T>(Dictionary<string, object?> parameters, HtmlRenderer htmlRenderer) where T : IComponent
 	{
@@ -172,6 +191,4 @@ public class Program
 
         return html;
 	}
-
-
 }

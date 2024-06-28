@@ -1,12 +1,11 @@
 ﻿@using MahjongDkStatsCalculators
-@using MahjongDkStats.CLI
 <!DOCTYPE html>
 <html lang="en">
 <Header />
 <body>
     <Logo />
     <h1 class="banner heading">Game Statistics of Mahjong Danmark</h1>
-    <div class="page"><p class="right">Last Updated: @NewestGameDate</p></div>
+    <div class="page"><p class="right">Last Updated: @Stats.NewestGameDate</p></div>
     <Heading Text="Overview" />
     <section class="statistics">
         <div>
@@ -164,7 +163,4 @@
 @code {
     [Parameter]
     public StatisticsResult Stats { get; set; } = null!;
-
-    [Parameter]
-    public DateOnly NewestGameDate { get; set; }
 }

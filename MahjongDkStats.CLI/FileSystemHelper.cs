@@ -2,18 +2,21 @@
 {
 	internal class FileSystemHelper
 	{
+		public const string OutputFolderName = "dist";
+		public const string ImagesPath = OutputFolderName + "/img";
+
 		public static void PrepareFoldersAndAssets()
 		{
-			if (Directory.Exists("dist"))
+			if (Directory.Exists(OutputFolderName))
 			{
-				Directory.Delete("dist", true);
+				Directory.Delete(OutputFolderName, true);
 			}
-			Directory.CreateDirectory("dist");
+			Directory.CreateDirectory(OutputFolderName);
 			if (Directory.Exists("assets"))
 			{
-				Copy("assets", "dist");
+				Copy("assets", OutputFolderName);
 			}
-			Directory.CreateDirectory("dist/img");
+			Directory.CreateDirectory(ImagesPath);
 		}
 
 		private static void Copy(string sourceDirectory, string targetDirectory)
@@ -28,14 +31,11 @@
 		{
 			Directory.CreateDirectory(target.FullName);
 
-			// Copy each file into the new directory.
 			foreach (FileInfo fi in source.GetFiles())
 			{
-				Console.WriteLine(@"Copying {0}\{1}", target.FullName, fi.Name);
 				fi.CopyTo(Path.Combine(target.FullName, fi.Name), true);
 			}
 
-			// Copy each subdirectory using recursion.
 			foreach (DirectoryInfo diSourceSubDir in source.GetDirectories())
 			{
 				DirectoryInfo nextTargetSubDir =
