@@ -1,6 +1,5 @@
 ﻿using MahjongDkStatsCalculators;
 using ScottPlot;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MahjongDkStats.CLI
 {
@@ -50,7 +49,7 @@ namespace MahjongDkStats.CLI
 			var positions = Enumerable.Range(1, 100).Where(x => x % 3 != 0).Chunk(2).ToArray();
 
 			Plot plot = new();
-			plot.Title("Games played per year");
+			plot.Title("Games played");
 			var x = stats.Select((s, i) => new Bar[] {
 				new Bar() { Position = positions[i][0], Value = s.McrGames, FillColor = Color.FromHex(PlotColorRedHex) },
 				new Bar() { Position = positions[i][1], Value = s.RiichiGames, FillColor = Color.FromHex(PlotColorGreenHex) }});
@@ -78,10 +77,10 @@ namespace MahjongDkStats.CLI
 
         internal static Plot CreateActivePlayersPerYearByRulesetPlot(YearStatistics[] stats)
         {
-            var positions = Enumerable.Range(1, 100).Where(x => x % 3 != 0).Chunk(2).ToArray();
+            var positions = Enumerable.Range(1, 3 * stats.Length).Where(x => x % 3 != 0).Chunk(2).ToArray();
 
             Plot plot = new();
-            plot.Title("Active players per year");
+            plot.Title("Active players");
             var x = stats.Select((s, i) => new Bar[] {
                 new Bar() { Position = positions[i][0], Value = s.McrActivePlayers, FillColor = Color.FromHex(PlotColorRedHex) },
                 new Bar() { Position = positions[i][1], Value = s.RiichiActivePlayers, FillColor = Color.FromHex(PlotColorGreenHex) }});

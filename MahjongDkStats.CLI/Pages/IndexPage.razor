@@ -52,19 +52,19 @@
             <table>
                 <tbody>
                     <tr>
-                        <td class="label">Best game: <PlayerLink Name="@Stats.McrRecords.RecordScore.PlayerName" Shorten="true" /></td>
+                        <td>Best game: <PlayerLink Name="@Stats.McrRecords.RecordScore.PlayerName" Shorten="true" /></td>
                         <td class="right">@(Stats.McrRecords.RecordScore.RecordValue)</td>
                     </tr>
                     <tr>
-                        <td class="label">Best recent game: <PlayerLink Name="@Stats.McrRecords.RecordRecentScore.PlayerName" Shorten="true" /></td>
+                        <td>Best recent game: <PlayerLink Name="@Stats.McrRecords.RecordRecentScore.PlayerName" Shorten="true" /></td>
                         <td class="right">@(Stats.McrRecords.RecordRecentScore.RecordValue)</td>
                     </tr>
                     <tr>
-                        <td class="label">Best rating: <PlayerLink Name="@Stats.McrRecords.RecordRating.PlayerName" Shorten="true" /></td>
+                        <td>Best rating: <PlayerLink Name="@Stats.McrRecords.RecordRating.PlayerName" Shorten="true" /></td>
                         <td class="right">@(Stats.McrRecords.RecordRating.RecordValue)</td>
                     </tr>
                     <tr>
-                        <td class="label">Best recent rating: <PlayerLink Name="@Stats.McrRecords.RecordRecentRating.PlayerName" Shorten="true" /></td>
+                        <td>Best recent rating: <PlayerLink Name="@Stats.McrRecords.RecordRecentRating.PlayerName" Shorten="true" /></td>
                         <td class="right">@(Stats.McrRecords.RecordRecentRating.RecordValue)</td>
                     </tr>
                 </tbody>
@@ -75,28 +75,24 @@
             <table>
                 <tbody>
                     <tr>
-                        <td class="label">Best game: <PlayerLink Name="@Stats.RiichiRecords.RecordScore.PlayerName" Shorten="true" /></td>
+                        <td>Best game: <PlayerLink Name="@Stats.RiichiRecords.RecordScore.PlayerName" Shorten="true" /></td>
                         <td class="right">@(Stats.RiichiRecords.RecordScore.RecordValue)</td>
                     </tr>
                     <tr>
-                        <td class="label">Best recent game: <PlayerLink Name="@Stats.RiichiRecords.RecordRecentScore.PlayerName" Shorten="true" /></td>
+                        <td>Best recent game: <PlayerLink Name="@Stats.RiichiRecords.RecordRecentScore.PlayerName" Shorten="true" /></td>
                         <td class="right">@(Stats.RiichiRecords.RecordRecentScore.RecordValue)</td>
                     </tr>
                     <tr>
-                        <td class="label">Best rating: <PlayerLink Name="@Stats.RiichiRecords.RecordRating.PlayerName" Shorten="true" /></td>
+                        <td>Best rating: <PlayerLink Name="@Stats.RiichiRecords.RecordRating.PlayerName" Shorten="true" /></td>
                         <td class="right">@(Stats.RiichiRecords.RecordRating.RecordValue)</td>
                     </tr>
                     <tr>
-                        <td class="label">Best recent rating: <PlayerLink Name="@Stats.RiichiRecords.RecordRecentRating.PlayerName" Shorten="true" /></td>
+                        <td>Best recent rating: <PlayerLink Name="@Stats.RiichiRecords.RecordRecentRating.PlayerName" Shorten="true" /></td>
                         <td class="right">@(Stats.RiichiRecords.RecordRecentRating.RecordValue)</td>
                     </tr>
                 </tbody>
             </table>
         </section>
-    </section>
-    <section>
-        <img src="img/games-per-ruleset-plot.png" />
-        <img src="img/players-per-ruleset-plot.png" />
     </section>
 
     <Heading Text="MCR Ratinglist - Active Members" />
@@ -116,12 +112,12 @@
                 @foreach (var entry in Stats.McrRatingList)
                 {
                     <tr>
-                        <td>@entry.Position</td>
-                        <td><PlayerLink Name="@entry.Name" /></td>
-                        <td data-sort="@Helpers.RemoveDecimalMarker(entry.Rating)">@entry.Rating</td>
-                        <td data-sort ="@Helpers.RemoveDecimalMarker(entry.ScorePerWind)">@entry.ScorePerWind</td>
-                        <td>@entry.GameCount</td>
-                        <td>@entry.WindCount</td>
+                        <td class="right">@entry.Position</td>
+                        <td><PlayerLink Name="@entry.Name" MaxLength="32" /></td>
+                        <td class="right" data-sort="@Helpers.RemoveDecimalMarker(entry.Rating)">@entry.Rating</td>
+                        <td class="right" data-sort="@Helpers.RemoveDecimalMarker(entry.ScorePerWind)">@entry.ScorePerWind</td>
+                        <td class="right">@entry.GameCount</td>
+                        <td class="right">@entry.WindCount</td>
                     </tr>
                 }
             </tbody>
@@ -144,16 +140,22 @@
                 @foreach (var entry in Stats.RiichiRatingList)
                 {
                     <tr>
-                        <td>@entry.Position</td>
-                        <td><PlayerLink Name="@entry.Name" /></td>
-                        <td data-sort="@Helpers.RemoveDecimalMarker(entry.Rating)">@entry.Rating</td>
-                        <td data-sort="@Helpers.RemoveDecimalMarker(entry.ScorePerWind)">@entry.ScorePerWind</td>
-                        <td>@entry.GameCount</td>
-                        <td>@entry.WindCount</td>
+                        <td class="right">@entry.Position</td>
+                        <td><PlayerLink Name="@entry.Name" MaxLength="32" /></td>
+                        <td class="right" data-sort="@Helpers.RemoveDecimalMarker(entry.Rating)">@entry.Rating</td>
+                        <td class="right" data-sort="@Helpers.RemoveDecimalMarker(entry.ScorePerWind)">@entry.ScorePerWind</td>
+                        <td class="right">@entry.GameCount</td>
+                        <td class="right">@entry.WindCount</td>
                     </tr>
                 }
             </tbody>
         </table>
+    </section>
+
+    <Heading Text="Historical activity" />
+    <section>
+        <img src="img/games-per-ruleset-plot.png" />
+        <img src="img/players-per-ruleset-plot.png" />
     </section>
     <Footer />
 </body>

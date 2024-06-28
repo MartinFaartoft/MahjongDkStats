@@ -79,7 +79,7 @@
 						@foreach(var player in game.Players)
 						{
 							<td class="single-line @(PlayerName == player.Name ? "highlight" : "")">
-								<PlayerLink Name="@player.Name" /><br /> @player.Score
+								<PlayerLink Name="@player.Name" Shorten="true" /><br /> @player.Score
 							</td>
 						}
 					</tr>
@@ -90,6 +90,8 @@
 
 	<h3 class="page">Head to Head statistics</h3>
 	<section class="player-table">
+		@if (RulesetStatistics.HeadToHeadStatistics.Count() > 0)
+		{
 		<table class="sortable">
 			<thead>
 				<tr>
@@ -116,7 +118,12 @@
 					</tr>
 				}
 			</tbody>
-		</table>
+			</table>
+		}
+		else
+		{
+			<p>No opponents with enough history.</p>
+		}
 	</section>
 }
 
