@@ -60,6 +60,11 @@ h4 {
     margin: 25px auto;
 }
 
+.logo {
+    max-width: 1000px;
+    margin: 33.6px auto;
+}
+
 section {
     max-width: 1000px;
     margin: 0 auto;
