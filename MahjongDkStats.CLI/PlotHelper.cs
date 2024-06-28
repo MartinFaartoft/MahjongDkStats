@@ -1,14 +1,17 @@
 ﻿using MahjongDkStatsCalculators;
 using ScottPlot;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MahjongDkStats.CLI
 {
-	internal class PlotHelper
+    internal partial class PlotHelper
 	{
 		private const string PlotBackgroundColorHex = "#FFFFFF";
-		private const string PlotLineColorHex = "#9C0000";
+		private const string PlotColorRedHex = "#9C0000";
+		private const string PlotColorGreenHex = "#2CA02C";
 
-		internal static Plot CreateDateTimePlot(DateTimeChart data, string title)
+
+        internal static Plot CreateDateTimePlot(DateTimeChart data, string title)
 		{
 			Plot plot = new();
 
@@ -28,7 +31,7 @@ namespace MahjongDkStats.CLI
 
 		private static readonly double[] RatingPositionTicks = [1, 10, 20, 30, 40, 50];
 
-		internal static Plot CreatingInvertedYDateTimePlot(DateTimeChart data, string title)
+		internal static Plot CreateInvertedYDateTimePlot(DateTimeChart data, string title)
 		{
 			var plot = CreateDateTimePlot(data, title);
 			if (data.X.Length == 0)
@@ -42,9 +45,71 @@ namespace MahjongDkStats.CLI
 			return plot;
 		}
 
-		private class MahjongDkPalette : IPalette
+		internal static Plot CreateGamesPerYearByRulesetPlot(YearStatistics[] stats)
 		{
-			public Color[] Colors => [Color.FromHex(PlotLineColorHex)];
+			var positions = Enumerable.Range(1, 100).Where(x => x % 3 != 0).Chunk(2).ToArray();
+
+			Plot plot = new();
+			plot.Title("Games played per year");
+			var x = stats.Select((s, i) => new Bar[] {
+				new Bar() { Position = positions[i][0], Value = s.McrGames, FillColor = Color.FromHex(PlotColorRedHex) },
+				new Bar() { Position = positions[i][1], Value = s.RiichiGames, FillColor = Color.FromHex(PlotColorGreenHex) }});
+
+            var bars = x.SelectMany(x => x).ToArray();
+			
+			plot.Add.Bars(bars);
+
+			// build the legend manually
+			plot.Legend.IsVisible = true;
+			plot.Legend.Alignment = Alignment.UpperRight;
+			plot.Legend.ManualItems.Add(new() { LabelText = "MCR", FillColor = Color.FromHex(PlotColorRedHex) });
+			plot.Legend.ManualItems.Add(new() { LabelText = "Riichi", FillColor = Color.FromHex(PlotColorGreenHex) });
+
+			// show group labels on the bottom axis
+			Tick[] ticks = stats.Select((s, i) => new Tick(positions[i][0] + .5, s.Year.ToString())).ToArray();
+			plot.Axes.Bottom.TickGenerator = new ScottPlot.TickGenerators.NumericManual(ticks);
+			plot.Axes.Bottom.MajorTickStyle.Length = 0;
+			plot.HideGrid();
+
+			plot.Axes.Margins(bottom: 0);
+
+			return plot;			
+		}
+
+        internal static Plot CreateActivePlayersPerYearByRulesetPlot(YearStatistics[] stats)
+        {
+            var positions = Enumerable.Range(1, 100).Where(x => x % 3 != 0).Chunk(2).ToArray();
+
+            Plot plot = new();
+            plot.Title("Active players per year");
+            var x = stats.Select((s, i) => new Bar[] {
+                new Bar() { Position = positions[i][0], Value = s.McrActivePlayers, FillColor = Color.FromHex(PlotColorRedHex) },
+                new Bar() { Position = positions[i][1], Value = s.RiichiActivePlayers, FillColor = Color.FromHex(PlotColorGreenHex) }});
+
+            var bars = x.SelectMany(x => x).ToArray();
+
+            plot.Add.Bars(bars);
+
+            // build the legend manually
+            plot.Legend.IsVisible = true;
+            plot.Legend.Alignment = Alignment.UpperRight;
+            plot.Legend.ManualItems.Add(new() { LabelText = "MCR", FillColor = Color.FromHex(PlotColorRedHex) });
+            plot.Legend.ManualItems.Add(new() { LabelText = "Riichi", FillColor = Color.FromHex(PlotColorGreenHex) });
+
+            // show group labels on the bottom axis
+            Tick[] ticks = stats.Select((s, i) => new Tick(positions[i][0] + .5, s.Year.ToString())).ToArray();
+            plot.Axes.Bottom.TickGenerator = new ScottPlot.TickGenerators.NumericManual(ticks);
+            plot.Axes.Bottom.MajorTickStyle.Length = 0;
+            plot.HideGrid();
+
+            plot.Axes.Margins(bottom: 0);
+
+            return plot;
+        }
+
+        private class MahjongDkPalette : IPalette
+		{
+			public Color[] Colors => [Color.FromHex(PlotColorRedHex)];
 
 			public string Name => "MahjongDK";
 

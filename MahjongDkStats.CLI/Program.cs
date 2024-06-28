@@ -8,6 +8,7 @@ using MahjongDkStats.CLI;
 using System.Globalization;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Components.Forms;
+using System.Numerics;
 
 public class Program
 {
@@ -53,9 +54,6 @@ public class Program
             statsCalculator.AppendGame(game, Ruleset.Riichi);
         }
 
-        var globalStatistics = statsCalculator.GetGlobalStatistics();
-        var mcrRecords = statsCalculator.GetMcrRecords();
-        var riichiRecords = statsCalculator.GetRiichiRecords();
         var playerStatistics = statsCalculator.GetPlayerStatistics().OrderBy(ps => ps.Name).ToArray();
         var memberStatistics = playerStatistics.Where(p => membersLookup.Contains(p.Name)).ToArray();
         var activeMemberStatistics = memberStatistics.Where(p => p.IsActive).ToArray();
@@ -68,8 +66,17 @@ public class Program
 		Console.WriteLine($"Calculated statistics in {stopwatch.ElapsedMilliseconds}ms");
 		stopwatch.Restart();
 
+        var res = new StatisticsResult(
+            statsCalculator.GetGlobalStatistics(),
+            statsCalculator.GetMcrRecords(),
+            statsCalculator.GetRiichiRecords(),
+            playerStatistics,
+            memberStatistics,
+            mcrRatingList,
+            riichiRatingList,
+            statsCalculator.GetYearStatistics().ToArray());
 
-		await RenderHtmlSite(new StatisticsResult(globalStatistics, mcrRecords, riichiRecords, playerStatistics, memberStatistics, mcrRatingList, riichiRatingList), newestGameDate, htmlRenderer);
+        await RenderHtmlSite(res, newestGameDate, htmlRenderer);
 		Console.WriteLine($"Built static site in {stopwatch.ElapsedMilliseconds}ms");
     }
 
@@ -117,6 +124,15 @@ public class Program
 
         var tasks = new List<Task>();
 
+
+        tasks.Add(Task.Run(()
+        => PlotHelper.CreateGamesPerYearByRulesetPlot(result.YearStatistics)
+                    .SavePng($"dist/img/games-per-ruleset-plot.png", _plotWidth, _plotHeight)));
+
+        tasks.Add(Task.Run(()
+        => PlotHelper.CreateActivePlayersPerYearByRulesetPlot(result.YearStatistics)
+                    .SavePng($"dist/img/players-per-ruleset-plot.png", _plotWidth, _plotHeight)));
+
         foreach (var player in result.PlayerStatistics)
         {
 			Dictionary<string, object?> playerParameters = new Dictionary<string, object?> { { "PlayerStats", player } };
@@ -130,13 +146,13 @@ public class Program
                     => PlotHelper.CreateDateTimePlot(player.McrStatistics.Rating, $"MCR rating - {player.Name}")
                     .SavePng($"dist/img/{NameSanitizer.SanitizeForUrlUsage(player.Name)}-mcr-rating.png", _plotWidth, _plotHeight)));
                 tasks.Add(Task.Run(()
-                    => PlotHelper.CreatingInvertedYDateTimePlot(player.McrStatistics.RatingListPosition, $"MCR ratinglist position - {player.Name}")
+                    => PlotHelper.CreateInvertedYDateTimePlot(player.McrStatistics.RatingListPosition, $"MCR ratinglist position - {player.Name}")
                     .SavePng($"dist/img/{NameSanitizer.SanitizeForUrlUsage(player.Name)}-mcr-position.png", _plotWidth, _plotHeight)));
                 tasks.Add(Task.Run(()
                     => PlotHelper.CreateDateTimePlot(player.RiichiStatistics.Rating, $"Riichi rating - {player.Name}")
                     .SavePng($"dist/img/{NameSanitizer.SanitizeForUrlUsage(player.Name)}-riichi-rating.png", _plotWidth, _plotHeight)));
                 tasks.Add(Task.Run(()
-                    => PlotHelper.CreatingInvertedYDateTimePlot(player.RiichiStatistics.RatingListPosition, $"Riichi ratinglist position - {player.Name}")
+                    => PlotHelper.CreateInvertedYDateTimePlot(player.RiichiStatistics.RatingListPosition, $"Riichi ratinglist position - {player.Name}")
                     .SavePng($"dist/img/{NameSanitizer.SanitizeForUrlUsage(player.Name)}-riichi-position.png", _plotWidth, _plotHeight)));
             }
 		}

@@ -7,5 +7,6 @@ public record StatisticsResult(
     PlayerStatistics[] PlayerStatistics,
 	PlayerStatistics[] MemberStatistics,
 	RatingEntry[] McrRatingList,
-	RatingEntry[] RiichiRatingList
+	RatingEntry[] RiichiRatingList,
+    YearStatistics[] YearStatistics
 	);
