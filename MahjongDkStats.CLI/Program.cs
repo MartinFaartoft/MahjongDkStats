@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using MahjongDkStats.CLI;
 using System.Globalization;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Components.Forms;
 
 public class Program
 {
@@ -57,11 +58,12 @@ public class Program
         var riichiRecords = statsCalculator.GetRiichiRecords();
         var playerStatistics = statsCalculator.GetPlayerStatistics().OrderBy(ps => ps.Name).ToArray();
         var memberStatistics = playerStatistics.Where(p => membersLookup.Contains(p.Name)).ToArray();
+        var activeMemberStatistics = memberStatistics.Where(p => p.IsActive).ToArray();
 
 		EnsureMemberNamesMatch(memberStatistics, membersLookup);
         
-        RatingEntry[] mcrRatingList = CreateMcrRatingList(playerStatistics);
-		RatingEntry[] riichiRatingList = CreateRiichiRatingList(playerStatistics);
+        RatingEntry[] mcrRatingList = CreateMcrRatingList(activeMemberStatistics);
+		RatingEntry[] riichiRatingList = CreateRiichiRatingList(activeMemberStatistics);
         var newestGameDate = mcrGames.Concat(riichiGames).MaxBy(g => g.DateOfGame)!.DateOfGame;
 		Console.WriteLine($"Calculated statistics in {stopwatch.ElapsedMilliseconds}ms");
 		stopwatch.Restart();
@@ -87,7 +89,7 @@ public class Program
         return playerStatistics
             .Where(ps => ps.McrStatistics.GameCount > 0 && ps.McrStatistics.LatestGame > Constants.ActiveThreshold)
             .OrderByDescending(ps => ps.McrStatistics.CurrentRating)
-            .Select((ps, i) => new RatingEntry(ps.Name, i+1, ps.McrStatistics.CurrentRating, ps.McrStatistics.GameCount))
+            .Select((ps, i) => new RatingEntry(ps.Name, i+1, ps.McrStatistics.CurrentRating, ps.McrStatistics.ScorePerWind, ps.McrStatistics.GameCount, ps.McrStatistics.WindCount))
             .ToArray();
 	}
 
@@ -96,7 +98,7 @@ public class Program
 		return playerStatistics
 			.Where(ps => ps.RiichiStatistics.GameCount > 0 && ps.RiichiStatistics.LatestGame > Constants.ActiveThreshold)
 			.OrderByDescending(ps => ps.RiichiStatistics.CurrentRating)
-			.Select((ps, i) => new RatingEntry(ps.Name, i + 1, ps.RiichiStatistics.CurrentRating, ps.RiichiStatistics.GameCount))
+			.Select((ps, i) => new RatingEntry(ps.Name, i + 1, ps.RiichiStatistics.CurrentRating, ps.RiichiStatistics.ScorePerWind, ps.RiichiStatistics.GameCount, ps.RiichiStatistics.WindCount))
 			.ToArray();
 	}
 

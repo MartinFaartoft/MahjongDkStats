@@ -94,27 +94,13 @@
             </table>
         </section>
     </section>
-    <Heading Text="Mahjong Danmark - Member Statistics" />
+    <Heading Text="MCR Ratinglist - Active Members" />
     <section class="player-table sortable">
         <table class="sortable">
             <thead>
                 <tr>
-                    <th class="no-sort"></th>
-                    <th class="left no-sort">MCR</th>
-                    <th class="no-sort"></th>
-                    <th class="no-sort extra"></th>
-                    <th class="no-sort extra"></th>
-                    <th class="left no-sort">Riichi</th>
-                    <th class="no-sort"></th>
-                    <th class="no-sort extra"></th>
-                    <th class="no-sort extra"></th>
-                </tr>
-                <tr>
-                    <th aria-sort="ascending">Name</th>
-                    <th>Rating</th>
-                    <th>S/w</th>
-                    <th>Games</th>
-                    <th>Winds</th>
+                    <th aria-sort="ascending">#</th>
+                    <th>Name</th>
                     <th>Rating</th>
                     <th>S/w</th>
                     <th>Games</th>
@@ -122,18 +108,43 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var entry in Stats.MemberStatistics.OrderBy(p => p.Name))
+                @foreach (var entry in Stats.McrRatingList)
                 {
                     <tr>
+                        <td>@entry.Position</td>
                         <td><PlayerLink Name="@entry.Name" /></td>
-                        <td class="right" data-sort="@Helpers.RemoveDecimalMarker(entry.McrStatistics.CurrentRating)">@entry.McrStatistics.CurrentRating</td>
-                        <td class="right" data-sort="@Helpers.RemoveDecimalMarker(entry.McrStatistics.ScorePerWind)">@entry.McrStatistics.ScorePerWind</td>
-                        <td class="right">@entry.McrStatistics.GameCount</td>
-                        <td class="right">@entry.McrStatistics.WindCount</td>
-                        <td class="right" data-sort="@Helpers.RemoveDecimalMarker(entry.RiichiStatistics.CurrentRating)">@entry.RiichiStatistics.CurrentRating</td>
-                        <td class="right">@(Math.Round(entry.RiichiStatistics.ScorePerWind))</td>
-                        <td class="right">@entry.RiichiStatistics.GameCount</td>
-                        <td class="right">@entry.RiichiStatistics.WindCount</td>
+                        <td data-sort="@Helpers.RemoveDecimalMarker(entry.Rating)">@entry.Rating</td>
+                        <td data-sort ="@Helpers.RemoveDecimalMarker(entry.ScorePerWind)">@entry.ScorePerWind</td>
+                        <td>@entry.GameCount</td>
+                        <td>@entry.WindCount</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </section>
+    <Heading Text="Riichi Ratinglist - Active Members" />
+    <section class="player-table sortable">
+        <table class="sortable">
+            <thead>
+                <tr>
+                    <th aria-sort="ascending">#</th>
+                    <th>Name</th>
+                    <th>Rating</th>
+                    <th>S/w</th>
+                    <th>Games</th>
+                    <th>Winds</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var entry in Stats.RiichiRatingList)
+                {
+                    <tr>
+                        <td>@entry.Position</td>
+                        <td><PlayerLink Name="@entry.Name" /></td>
+                        <td data-sort="@Helpers.RemoveDecimalMarker(entry.Rating)">@entry.Rating</td>
+                        <td data-sort="@Helpers.RemoveDecimalMarker(entry.ScorePerWind)">@entry.ScorePerWind</td>
+                        <td>@entry.GameCount</td>
+                        <td>@entry.WindCount</td>
                     </tr>
                 }
             </tbody>
