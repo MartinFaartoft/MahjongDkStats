@@ -61,9 +61,12 @@ internal class PlayerStatisticsCalculator
 		stats.HandCount += game.NumberOfWinds * game.Players.Count();
 		stats.ScoreSum += player.Score;
 		_winningStreakCalculator.AddGame(player, ruleset, game);
-		stats.RecordGameScore = player.Score > stats.RecordGameScore.RecordValue
+		stats.BestScoringGame = player.Score > stats.BestScoringGame.RecordValue
 			? new RecordGame<int>(game, player.Name, player.Score)
-			: stats.RecordGameScore;
+			: stats.BestScoringGame;
+		stats.WorstScoringGame = player.Score < stats.WorstScoringGame.RecordValue
+			? new RecordGame<int>(game, player.Name, player.Score)
+			: stats.WorstScoringGame;
 		stats.GameHistory.Add(game);	
 	}
 
@@ -116,7 +119,8 @@ internal class PlayerStatisticsCalculator
 					latestGame?.DateOfGame ?? DateOnly.MinValue,
 					rulesetStats.ScoreSum,
 					_winningStreakCalculator.GetLongestWinningStreak(stats.Name, ruleset),
-					rulesetStats.RecordGameScore,
+					rulesetStats.BestScoringGame,
+					rulesetStats.WorstScoringGame,
 					scorePerWind,
 					headToHeadStatistics,
 					rulesetStats.GameHistory,
@@ -183,7 +187,9 @@ internal class PlayerStatisticsCalculator
 
 		public int LongestWinningStreak { get; set; }
 
-		public RecordGame<int> RecordGameScore { get; set; } = RecordGame<int>.None(int.MinValue);
+		public RecordGame<int> BestScoringGame { get; set; } = RecordGame<int>.None(int.MinValue);
+
+		public RecordGame<int> WorstScoringGame { get; set; } = RecordGame<int>.None(int.MaxValue);
 
 		public Dictionary<DateOnly, decimal> Rating { get; set; } = [];
 
