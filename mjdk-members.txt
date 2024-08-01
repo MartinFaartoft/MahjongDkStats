@@ -1,4 +1,4 @@
-Anders Labich Nielsen
+Anders Labich
 Anders Lantz Ring
 Bao Zheng Liu
 Camilla Bonde Dalsgaard
@@ -8,18 +8,18 @@ Eivind Bengtsson
 Emily Fladstrand
 Erik Frederiksen
 Esben Andersen
-Eskild Middelboe
+Eskild Theodor Middelboe
 Frank Rostved-Anberg
 Freddy Christiansen
 Hans Mortensen
 Henrik Leth
 Isabel Bahiano Steenholm
 Jamie Shellenberger
-Jeppe Stig Salling Nielsen
+Jeppe Stig Nielsen
 Jesper Nøhr
-Kasra Tahmasebi Shahrebabak
+Kasra Tahmasebi
 Lars Therkelsen
-Laurits Larsen
+Laurits Fredsgaard Larsen
 Martin Faartoft
 Martin Hansen
 Martin Leth
@@ -31,13 +31,13 @@ Mikkel Askjær-Friis
 Morten Andersen
 Nathja Lund-Jørgensen
 Robert Bonde Jensen
-Sebastian Elleholm
+Sebastian Vikkelsø Elleholm
 Sebastian Lavallée
 Sheila Hansen
-Shi Hua Chen
-Sune Gjeding Thomsen
+Shi Hua Chen Kold
+Sune Thomsen
 Susan Frederiksen
 Tina Christensen
 Ting Fang Olsen
-Yifang Ngee Hong Teo
+Yi Fang
 Zhidie Wu

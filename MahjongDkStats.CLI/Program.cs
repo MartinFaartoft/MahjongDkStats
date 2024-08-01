@@ -69,7 +69,8 @@ public class Program
         var memberStatistics = playerStatistics.Where(p => membersLookup.Contains(p.Name)).ToArray();
         var activeMemberStatistics = memberStatistics.Where(p => p.IsActive).ToArray();
 
-        EnsureMemberNamesMatch(memberStatistics, membersLookup);
+        var playersLookup = new HashSet<string>(playerStatistics.Select(p => p.Name));
+        EnsureMemberNamesMatch(playersLookup, membersLookup);
 
         RatingEntry[] mcrRatingList = CreateMcrRatingList(activeMemberStatistics);
         RatingEntry[] riichiRatingList = CreateRiichiRatingList(activeMemberStatistics);
@@ -101,16 +102,36 @@ public class Program
         }
     }
 
-    private static void EnsureMemberNamesMatch(PlayerStatistics[] memberStatistics, HashSet<string> membersLookup)
+    private static void EnsureMemberNamesMatch(HashSet<string> playerNames, HashSet<string> memberNames)
 	{
-        foreach (var member in memberStatistics)
+        foreach (var member in memberNames)
         {
-            if(!membersLookup.Contains(member.Name))
+            if(!playerNames.Contains(member))
             {
-                Console.WriteLine("Missing member: {}", member.Name);
+                Console.WriteLine("Missing member: {0}, maybe {1}?", member, FindBestMatch(member, playerNames));
             }
         }
 	}
+
+    private static string FindBestMatch(string s, IEnumerable<string> candidates)
+    {
+        var lev = new Fastenshtein.Levenshtein(s);
+
+        string closest = string.Empty;
+        int dist = int.MaxValue;
+
+        foreach (var candidate in candidates)
+        {
+            var d = lev.DistanceFrom(candidate);
+            if (d < dist)
+            {
+                closest = candidate;
+                dist = d;
+            }
+        }
+
+        return closest;
+    }
 
 	private static RatingEntry[] CreateMcrRatingList(IEnumerable<PlayerStatistics> playerStatistics)
     {
