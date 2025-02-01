@@ -1,4 +1,5 @@
-﻿namespace MahjongDkStatsCalculators.Calculators;
+﻿
+namespace MahjongDkStatsCalculators.Calculators;
 
 internal class YearStatisticsCalculator
 { 
@@ -19,30 +20,71 @@ internal class YearStatisticsCalculator
         if (ruleset == Ruleset.Mcr)
         {
             s.McrGameCount++;
-            s.McrPlayerNames.UnionWith(game.Players.Select(p => p.Name));
+            foreach(var player in game.Players)
+            {
+                if (s.McrPlayers.ContainsKey(player.Name))
+                {
+                    s.McrPlayers[player.Name] += game.NumberOfWinds;
+                } else
+                {
+					s.McrPlayers[player.Name] = game.NumberOfWinds;
+				}
+            }
         }
         else if (ruleset == Ruleset.Riichi)
         {
             s.RiichiGameCount++;
-            s.RiichiPlayerNames.UnionWith(game.Players.Select(p => p.Name));
-        }
+			foreach (var player in game.Players)
+			{
+				if (s.RiichiPlayers.ContainsKey(player.Name))
+				{
+					s.RiichiPlayers[player.Name] += game.NumberOfWinds;
+				}
+				else
+				{
+					s.RiichiPlayers[player.Name] = game.NumberOfWinds;
+				}
+			}
+		}
     }
 
     internal IEnumerable<YearStatistics> GetYearStatistics()
     {
-        return _yearStats.Select(kv => new YearStatistics(kv.Key, kv.Value.McrGameCount, kv.Value.RiichiGameCount, kv.Value.McrPlayerNames.Count, kv.Value.RiichiPlayerNames.Count))
-            .OrderBy(y => y.Year);
+        return _yearStats.Select(kv => CalculateYearStatistics(kv.Key, kv.Value)).OrderBy(y => y.Year);
     }
-    
 
-    private class YearStats
+    private YearStatistics CalculateYearStatistics(int year, YearStats yearStats)
+    {
+        var mostActiveMcrPlayer = yearStats.McrPlayers.Any() ? yearStats.McrPlayers.MaxBy(x => x.Value) : new KeyValuePair<string, int>("No games played", 0);
+		var mostActiveRiichiPlayer = yearStats.RiichiPlayers.MaxBy(x => x.Value);
+        var mergedPlayers = MergePlayers(yearStats.McrPlayers, yearStats.RiichiPlayers);
+        var mostActivePlayer = mergedPlayers.MaxBy(x => x.Value);
+
+        return new YearStatistics(
+            year,
+            yearStats.McrGameCount,
+            yearStats.RiichiGameCount,
+            yearStats.McrPlayers.Count,
+            new PlayerYearWindCount(mostActiveMcrPlayer.Key, mostActiveMcrPlayer.Value),
+            yearStats.RiichiPlayers.Count,
+            new PlayerYearWindCount(mostActiveRiichiPlayer.Key, mostActiveRiichiPlayer.Value),
+            new PlayerYearWindCount(mostActivePlayer.Key, mostActivePlayer.Value));
+	}
+
+	private Dictionary<string, int> MergePlayers(Dictionary<string, int> mcrPlayers, Dictionary<string, int> riichiPlayers)
+	{
+		var keys = mcrPlayers.Keys.Union(riichiPlayers.Keys);
+        return keys.ToDictionary(k => k, v => (mcrPlayers.TryGetValue(v, out int mcr) ? mcr : 0) + (riichiPlayers.TryGetValue(v, out int riichi) ? riichi : 0));
+	}
+
+	private class YearStats
     {
         public int McrGameCount { get; set; }
 
         public int RiichiGameCount { get; set; }
 
-        public HashSet<string> McrPlayerNames { get; set; } = new HashSet<string>();
-        
-        public HashSet<string> RiichiPlayerNames { get; set; } = new HashSet<string>();
+		public Dictionary<string, int> McrPlayers { get; set; } = new();
+
+		public Dictionary<string, int> RiichiPlayers { get; set; } = new ();
     }
 }

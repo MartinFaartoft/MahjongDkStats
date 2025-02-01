@@ -156,6 +156,30 @@
         <img src="img/games-per-ruleset-plot.png" />
         <img src="img/players-per-ruleset-plot.png" />
     </section>
+
+    <Heading Text="Most active player by year" />
+    <section class="player-table sortable">
+        <table class="sortable">
+            <thead>
+                <tr>
+                    <th aria-sort="ascending">Year</th>
+                    <th>Name</th>
+                    <th>Winds played</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var entry in Stats.YearStatistics.OrderByDescending(x => x.Year))
+                {
+                    <tr>
+                        <td class="right">@entry.Year</td>
+                        <td><PlayerLink Name="@entry.TotalMostActivePlayer.Name" MaxLength="32" /></td>
+                        <td class="right">@entry.TotalMostActivePlayer.Winds</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </section>
+
     <Footer />
 </body>
 </html>
