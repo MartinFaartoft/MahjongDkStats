@@ -26,7 +26,6 @@ Marc Selmer
 Martin Faartoft
 Martin Hansen
 Martin Leth
-Martin Madsen
 Martin Wedel Jacobsen
 Mathias Remming Wester
 Michael Berth
@@ -43,5 +42,3 @@ Sune Thomsen
 Susan Frederiksen
 Tina Christensen
 Ting Fang Olsen
-Yi Fang
-Zhidie Wu
