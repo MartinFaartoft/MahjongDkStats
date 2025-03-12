@@ -228,3 +228,7 @@ footer a, footer a:visited, footer a:hover {
 .positive {
     color: var(--green);
 }
+
+.rating-delta {
+    font-size-adjust: .35;
+}

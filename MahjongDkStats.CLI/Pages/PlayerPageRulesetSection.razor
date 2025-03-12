@@ -84,7 +84,7 @@
 						@foreach(var player in game.Players)
 						{
 							<td class="single-line @(PlayerName == player.Name ? "highlight" : "")">
-								<PlayerLink Name="@player.Name" Shorten="true" /><br /> <p class="@(PlayerName == player.Name && player.Score > 0 ? "positive" : "")">@player.Score</p>
+								<PlayerLink Name="@player.Name" Shorten="true" /><br /> <p class="@(PlayerName == player.Name && player.Score > 0 ? "positive" : "")">@player.Score<span class="rating-delta">&nbsp;(@player.RatingDelta())</span></p>
 							</td>
 						}
 					</tr>
