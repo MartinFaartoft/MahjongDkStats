@@ -10,4 +10,4 @@ Rebuilt weekly to keep statistics up to date.
 4. copy `dist/` somewhere that's exposed to the internet (currently done automatically through Netlify)
 
 ## Requirements
-- .net 8
+- .net 8.0 or greater
